@@ -67,6 +67,11 @@ const AdminSidebar = ({ children }) => {
             icon: <MdLibraryAdd />
         },
         {
+            path: "/adminCategory",
+            name: "Categories",
+            icon: <MdLibraryAdd />
+        },
+        {
             path: "/adminWallet",
             name: "Wallet",
             icon: <GiWallet />
@@ -102,7 +107,7 @@ const AdminSidebar = ({ children }) => {
                 }}
                 className="border-r border-cyan-400 bg-[rgba(0,0,0,0.4)] min-h-screen text-white transition-all duration-500 fixed z-10 shadow-md shadow-gray-600"
             >
-                <div className="top_section flex items-center py-[20px] pb-8 border-b border-cyan-400 " style={{ marginBottom: isOpen ? "20px" : "60px" }}>
+                <div className="top_section flex items-center  pb-4 py-[15px] " style={{ marginBottom: isOpen ? "20px" : "60px" }}>
                     <img src={agrlogo} alt="" style={{ display: isOpen ? "block" : "none" }} className="logo w-[85px] sm:w-[100px] ml-14 sm:ml-16 mt-5" />
                     <div style={{ marginTop: isOpen ? "15px" : "30px", fontSize: isOpen ? "30px" : "25px", marginLeft: isOpen ? "16px" : "7px" }} className="bars flex justify-center items-center text-3xl cursor-pointer hover:text-blue-400 absolute">
                         <FaBars onClick={toggle} />
@@ -114,7 +119,7 @@ const AdminSidebar = ({ children }) => {
                             <NavLink
                                 to={item.path}
                                 key={index}
-                                className="link flex items-center py-[8px] px-[18px] gap-[15px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-5 "
+                                className="link flex items-center py-[8px] px-[18px] gap-[15px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-4 "
                                 activeClassName="active"
                                 style={{ justifyContent: isOpen ? "start" : "center" }}
                                 onClick={handleMenuClick}

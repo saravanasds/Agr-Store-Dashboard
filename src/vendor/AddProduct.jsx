@@ -30,7 +30,7 @@ const AddProduct = () => {
 
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/vendor/categories');
+        const response = await axios.get('http://localhost:5000/api/admin/getAllCategories');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -40,9 +40,9 @@ const AddProduct = () => {
     fetchCategories();
   }, []);
 
-  // const handleCategoryChange = (event) => { 
-  //   setCategory(event.target.value);
-  // };
+  const handleCategoryChange = (event) => { 
+    setCategory(event.target.value);
+  };
 
   // const handleNewCategoryChange = (event) => {
   //   setNewCategory(event.target.value);
@@ -157,28 +157,6 @@ const AddProduct = () => {
               </span>
             </div>
 
-            {/* <div className="">
-              <label className="block text-gray-700 font-semibold mb-1" htmlFor="cat">
-                Create Category
-              </label>
-              <div className="flex w-full border rounded-md border-gray-300">
-                <input
-                  type="text"
-                  name="cat"
-                  id="cat"
-                  value={newCategory}
-                  onChange={handleNewCategoryChange}
-                  className="flex-grow border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500 w-[70%] outline-none border-none"
-                />
-                <button
-                  onClick={handleCreateCategory}
-                  className="bg-cyan-700 text-white rounded-e-md hover:bg-gray-600 focus:outline-none w-[30%]"
-                >
-                  Create
-                </button>
-              </div>
-            </div>
-
             <div className="">
               <label className="block text-gray-700 font-semibold mb-1" htmlFor="categorySelect">
                 Select Category
@@ -197,7 +175,7 @@ const AddProduct = () => {
                   </option>
                 ))}
               </select>
-            </div> */}
+            </div>
 
             <div className="">
               <label className="block text-gray-700 font-semibold mb-1" htmlFor="category">
