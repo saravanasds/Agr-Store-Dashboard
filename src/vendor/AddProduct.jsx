@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { VscAccount } from "react-icons/vsc";
-import axios from 'axios'; // For making HTTP requests
+import axios from 'axios';
 
 const AddProduct = () => {
   const [department, setDepartment] = useState('');
   const [vendorEmail, setVendorEmail] = useState('');
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState('');
-  // const [newCategory, setNewCategory] = useState('');
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
   const [unit, setUnit] = useState('');
@@ -18,51 +17,41 @@ const AddProduct = () => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-
     const vendorEmail = localStorage.getItem("vendorEmail");
     setVendorEmail(vendorEmail);
 
-    const vendorDepertment = localStorage.getItem("vendorDepartment");
-    setDepartment(vendorDepertment);
+    const vendorDepartment = localStorage.getItem("vendorDepartment");
+    setDepartment(vendorDepartment);
 
-    const vendorCommision = localStorage.getItem("vendorCommision");
-    setCommissionPercent(vendorCommision);
+    const vendorCommission = localStorage.getItem("vendorCommision");
+    console.log("Vendor Commission:", vendorCommission); // Add this line to debug
+    setCommissionPercent(parseFloat(vendorCommission) || 0);
+
 
     const fetchCategories = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/admin/getAllCategories');
-        setCategories(response.data);
+        const allCategories = response.data;
+
+        // Filter categories by vendor's department
+        const filteredCategories = allCategories.filter(
+          (cat) => cat.department === vendorDepartment
+        );
+
+        setCategories(filteredCategories);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
 
-    fetchCategories();
+    if (vendorDepartment) {
+      fetchCategories();
+    }
   }, []);
 
-  const handleCategoryChange = (event) => { 
+  const handleCategoryChange = (event) => {
     setCategory(event.target.value);
   };
-
-  // const handleNewCategoryChange = (event) => {
-  //   setNewCategory(event.target.value);
-  // };
-
-  // const handleCreateCategory = async (event) => {
-  //   event.preventDefault();
-  //   if (newCategory.trim() && department) {
-  //     try {
-  //       const response = await axios.post('http://localhost:5000/api/vendor/category', {
-  //         category: newCategory,
-  //         department
-  //       });
-  //       setCategories([...categories, response.data]);
-  //       setNewCategory('');
-  //     } catch (error) {
-  //       console.error('Error creating category:', error);
-  //     }
-  //   }
-  // };
 
   const handleProductImageChange = (event) => {
     const file = event.target.files[0];
@@ -70,40 +59,23 @@ const AddProduct = () => {
     setPreview(URL.createObjectURL(file));
   };
 
-  // const handleProductImageChange = (event) => {
-  //   const file = event.target.files[0];
-
-  //   if (file) {
-  //     // Check if the file size is below 300 KB
-  //     const fileSizeInKB = file.size / 1024;
-  //     if (fileSizeInKB > 300) {
-  //       setError('File size must be below 300 KB.');
-  //       return;
-  //     }
-
-  //     setError('');
-  //     // Process the file here, for example, by uploading it or displaying a preview
-  //     // ...
-  //   }
-  // };
-
   const handleAddProduct = async (event) => {
     event.preventDefault();
-  
+
     const newErrors = {};
-  
+
     if (!category) newErrors.category = 'Category is required';
     if (!productName) newErrors.productName = 'Product Name is required';
     if (!unit) newErrors.unit = 'Unit is required';
     if (!price) newErrors.price = 'Price is required';
-  
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-  +
+
     setErrors({}); // Clear errors if validation passes
-  
+
     const formData = new FormData();
     formData.append('vendorEmail', vendorEmail);
     formData.append('department', department);
@@ -115,7 +87,7 @@ const AddProduct = () => {
     if (productImage) {
       formData.append('productImage', productImage);
     }
-  
+
     try {
       await axios.post('http://localhost:5000/api/vendor/addProduct', formData, {
         headers: {
@@ -127,7 +99,6 @@ const AddProduct = () => {
       console.error('Error adding product:', error);
     }
   };
-  
 
   return (
     <div className="w-full min-h-screen bg-slate-300">
@@ -147,7 +118,7 @@ const AddProduct = () => {
           className='w-[90%] border-2 flex flex-col xl:flex-row items-center justify-center bg-white shadow-sm shadow-black'
           onSubmit={handleAddProduct}
         >
-          <div className="w-full xl:w-[70%] bg-white  rounded p-6 flex flex-col sm:p-8 md:grid lg:grid-cols-2 gap-6 border">
+          <div className="w-full xl:w-[70%] bg-white rounded p-6 flex flex-col sm:p-8 md:grid lg:grid-cols-2 gap-6 border">
             <div className="">
               <label className="block text-gray-700 font-semibold mb-1" htmlFor="dept">
                 Department
@@ -170,25 +141,11 @@ const AddProduct = () => {
               >
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
+                  <option key={cat._id} value={cat.category}>
                     {cat.category}
                   </option>
                 ))}
               </select>
-            </div>
-
-            <div className="">
-              <label className="block text-gray-700 font-semibold mb-1" htmlFor="category">
-                Category
-              </label>
-              <input
-                type="text"
-                name="category"
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
-              />
             </div>
 
             <div className="">
@@ -282,7 +239,7 @@ const AddProduct = () => {
 
           <div className='w-full xl:w-[30%] border flex flex-col justify-center items-center p-6'>
             <h2 className="text-xl font-semibold mb-3">Product Preview</h2>
-            <div className=' border-2 border-black'>
+            <div className='border-2 border-black'>
               <div className="w-full bg-white shadow-sm rounded">
                 {preview && (
                   <div className="flex justify-center items-center">

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { VscAccount } from "react-icons/vsc";
 
 const AddNewVendor = () => {
+  const [departments, setDepartments] = useState([]);
   const [department, setDepartment] = useState('');
   const [shopName, setShopName] = useState('');
   const [vendorName, setVendorName] = useState('');
@@ -19,6 +20,21 @@ const AddNewVendor = () => {
   const [vendorPassword, setVendorPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
   const [errors, setErrors] = useState({});
+
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/admin/getAllDepartments');
+        console.log('Departments:', response.data);
+        setDepartments(response.data);
+      } catch (error) {
+        console.error('Error fetching departments:', error);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
 
   const handleDepartmentChange = (event) => {
     setDepartment(event.target.value);
@@ -101,14 +117,14 @@ const AddNewVendor = () => {
               id="department"
               value={department}
               onChange={handleDepartmentChange}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-500 bg-gray-800 " // Change the bg color
+              className="w-full border border-gray-300 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-500 bg-gray-800"
             >
-              <option value="" className="text-gray-500 bg-transparent">Select Dept</option>
-              <option value="groceries" className="text-white bg-transparent">Groceries</option>
-              <option value="furniture" className="text-white bg-transparent">Furniture</option>
-              <option value="cosmetics" className="text-white bg-transparent">Cosmetics</option>
-              <option value="clothes" className="text-white bg-transparent">Clothes</option>
-              <option value="electronics" className="text-white bg-transparent">Electronics</option>
+              <option value="" className="text-gray-500 bg-transparent">Select Department</option>
+              {departments.map(dept => (
+                <option key={dept._id} value={dept.department} className="text-white bg-gray-800">
+                  {dept.department}
+                </option>
+              ))}
             </select>
 
             {errors.department && <p className="text-red-500 text-xs mt-1">{errors.department}</p>}
