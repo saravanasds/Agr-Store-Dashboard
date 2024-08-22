@@ -1,58 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { VscAccount } from "react-icons/vsc";
+import axios from 'axios';
 
 const AdminOrderStatus = () => {
-  const [expandedOrderId, setExpandedOrderId] = useState(null);
-  const [popupOrder, setPopupOrder] = useState({ id: null, action: null });
+  const [activeTab, setActiveTab] = useState('current'); // State to manage active tab
+  const [orders, setOrders] = useState([]);
 
-  const orders = [
-    {
-      id: 1,
-      product: 'Rajabogam Rice',
-      status: 'Placed',
-      price: 1000,
-      quantity: 20,
-      time: '2024-07-30 14:30',
-    },
-    {
-      id: 2,
-      product: 'Tomato',
-      status: 'Processing',
-      price: 200,
-      quantity: 10,
-      time: '2024-07-29 13:00',
-    },
-    {
-      id: 3,
-      product: 'Onion',
-      status: 'Completed',
-      price: 300,
-      quantity: 15,
-      time: '2024-07-28 11:15',
-    },
-    {
-      id: 4,
-      product: 'Brinjal',
-      status: 'Cancel',
-      price: 150,
-      quantity: 5,
-      time: '2024-07-27 10:00',
-    }
-  ];
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/order/getAllOrders`);
+        setOrders(response.data.orders);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
 
-  const stages = ['Placed', 'Processing', 'Completed', 'Cancel'];
+    fetchOrders();
+  }, [activeTab]); // Fetch orders when active tab or vendorEmail changes
 
-  const toggleAccordion = (id) => {
-    setExpandedOrderId(expandedOrderId === id ? null : id);
-  };
+  console.log(orders)
 
-  const openPopup = (orderId, action) => {
-    setPopupOrder({ id: orderId, action });
-  };
+  const renderTable = (filteredOrders) => (
+    <table className="min-w-full bg-white">
+      <thead>
+        <tr>
+          <th className="py-2">Product</th>
+          <th className="py-2">Status</th>
+          <th className="py-2">Price</th>
+          <th className="py-2">Quantity</th>
+          <th className="py-2">Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {filteredOrders.map((order) => (
+          order.products.map(product => (
+            <tr key={product.productId} className="border-b">
+              <td className="py-2 text-center">{product.productName}</td>
+              <td className="py-2 text-center">{product.orderStatus || order.orderStatus}</td>
+              <td className="py-2 text-center">{product.price}</td>
+              <td className="py-2 text-center">{product.quantity}</td>
+              <td className="py-2 text-center">{new Date(order.createdAt).toLocaleString()}</td>
+            </tr>
+          ))
+        ))}
+      </tbody>
+    </table>
+  );
 
-  const closePopup = () => {
-    setPopupOrder({ id: null, action: null });
-  };
+  const currentOrders = orders.filter(order => order.orderStatus === 'Processing');
+  const completedOrders = orders.filter(order => order.orderStatus === 'Completed');
 
   return (
     <div className='w-full min-h-screen '>
@@ -63,119 +60,27 @@ const AdminOrderStatus = () => {
         </div>
       </div>
 
-      <div className='p-4 md:p-10 text-white'>
-        {orders.map(order => (
-          <div key={order.id} className='mb-4 p-4 bg-[rgba(0,0,0,0.4)] rounded shadow-md'>
-            <div className='flex justify-between items-center'>
-              <h2 className='text-base md:text-lg font-semibold'>
-                {order.product}
-                <span
-                  className={`ml-2 ${order.status === 'Placed' ? 'text-blue-600' :
-                    order.status === 'Processing' ? 'text-yellow-400' :
-                      order.status === 'Cancel' ? 'text-red-600' :
-                        'text-lime-500'
-                    }`}
-                >
-                  ({order.status})
-                </span>
-              </h2>
-              <div>
-                <button
-                  className='bg-red-600 px-2 py-1 text-white rounded mr-3 text-xs'
-                  onClick={() => openPopup(order.id, 'Cancel')}
-                >
-                  Cancel
-                </button>
-                <button
-                  className='bg-lime-600 px-2 py-1 text-white rounded mr-3 text-xs'
-                  onClick={() => openPopup(order.id, 'Complete')}
-                >
-                  Complete
-                </button>
-                <button
-                  onClick={() => toggleAccordion(order.id)}
-                  className='px-2 py-1 text-black rounded mr-3 text-xs bg-gray-300'
-                >
-                  {expandedOrderId === order.id ? 'Hide Details <' : 'Show Details >'}
-                </button>
-              </div>
-            </div>
+      <div className="w-full p-4">
+        <div className="flex justify-center space-x-4 mb-4">
+          <button
+            onClick={() => setActiveTab('current')}
+            className={`py-2 px-4 rounded ${activeTab === 'current' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}
+          >
+            Current Orders
+          </button>
+          <button
+            onClick={() => setActiveTab('completed')}
+            className={`py-2 px-4 rounded ${activeTab === 'completed' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}
+          >
+            Completed Orders
+          </button>
+        </div>
 
-            <div className='mt-4'>
-              <div className='flex justify-between'>
-                {stages.map((stage, index) => (
-                  <div key={index} className='flex items-center'>
-                    <div
-                      className={`flex items-center justify-center w-5 h-5 md:w-6 md:h-6 rounded-full ${stages.indexOf(order.status) >= index
-                        ? order.status === 'Placed' ? 'bg-blue-600 text-white' :
-                          order.status === 'Processing' ? 'bg-yellow-400 text-white' :
-                            order.status === 'Cancel' ? 'bg-red-600 text-white' :
-                              'bg-lime-500 text-white'
-                        : 'bg-gray-300'
-                        }`}
-                    >
-                      {stages.indexOf(order.status) >= index && (
-                        <span className='text-xs'>{index + 1}</span>
-                      )}
-                    </div>
-                    {index < stages.length - 1 && (
-                      <div className='w-6 md:w-16 lg:w-24 h-1 bg-gray-300 mx-1 md:mx-2'>
-                        <div
-                          className={`h-1 ${stages.indexOf(order.status) > index
-                            ? order.status === 'Placed' ? 'bg-blue-600' :
-                              order.status === 'Processing' ? 'bg-yellow-400' :
-                                order.status === 'Cancel' ? 'bg-red-600' :
-                                  'bg-lime-500'
-                            : ''
-                            }`}
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div className='flex justify-between mt-2 text-xs md:text-sm'>
-                {stages.map((stage, index) => (
-                  <span key={index} className='w-6 md:w-24 text-end'>{stage}</span>
-                ))}
-              </div>
-              {expandedOrderId === order.id && (
-                <div className='mt-4 text-xs md:text-sm flex flex-col md:flex-row gap-2 md:gap-10 bg-gray-400 p-2 rounded text-black'>
-                  <p><strong>Price:</strong> &#x20B9; {order.price}</p>
-                  <p><strong>Quantity:</strong> {order.quantity}</p>
-                  <p><strong>Time:</strong> {order.time}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+        <div className="bg-white shadow rounded-lg p-4">
+          {activeTab === 'current' ? renderTable(currentOrders) : renderTable(completedOrders)}
+        </div>
       </div>
 
-      {popupOrder.id !== null && (
-        <div className='fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50'>
-          <div className='bg-white p-6 rounded-lg shadow-lg'>
-            <h2 className='text-xl font-semibold mb-4'>
-              {popupOrder.action === 'Cancel' ? 'Cancel Order' : 'Complete Order'}
-            </h2>
-            <p className='mb-6'>
-              Are you sure you want to {popupOrder.action.toLowerCase()} this order?
-            </p>
-            <div className='flex justify-end'>
-              <button
-                className='bg-gray-300 px-4 py-1 rounded mr-2'
-                onClick={closePopup}
-              >
-                No
-              </button>
-              <button
-                className={`bg-${popupOrder.action === 'Cancel' ? 'red' : 'lime'}-600 px-4 py-1 text-white rounded`}
-              >
-                Yes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
