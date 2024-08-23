@@ -13,7 +13,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import agrlogo from '../../public/assets/agr-logo.png'
 import bg from "../../public/assets/bg-1.jpg"
 
-const AdminSidebar = ({ children }) => {
+const AdminSidebar = ({ children, role }) => {
     const [isOpen, setIsOpen] = useState(window.innerWidth > 568);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 568);
 
@@ -40,51 +40,67 @@ const AdminSidebar = ({ children }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Filter menu items based on the role
     const menuItem = [
         {
             path: "/adminDashboard",
             name: "Overview",
-            icon: <MdWindow />
+            icon: <MdWindow />,
+            roles: ["admin"]
         },
         {
-            path: "/membersDetails",
-            name: "Members Details",
-            icon: <IoListSharp />
+            path: "/adminDetails",
+            name: "Admin Details",
+            icon: <IoListSharp />,
+            roles: ["admin"]
         },
         {
             path: "/vendorDetails",
             name: "Vendor Details",
-            icon: <MdLibraryAdd />
+            icon: <MdLibraryAdd />,
+            roles: ["admin"]
         },
         {
             path: "/addNewVendor",
             name: "Add New Vendor",
-            icon: <MdLibraryAdd />
+            icon: <MdLibraryAdd />,
+            roles: ["admin"]
+        },
+        {
+            path: "/membersDetails",
+            name: "Members Details",
+            icon: <IoListSharp />,
+            roles: ["admin"]
         },
         {
             path: "/adminDepartment",
             name: "Departments",
-            icon: <MdLibraryAdd />
+            icon: <MdLibraryAdd />,
+            roles: ["admin"]
         },
         {
             path: "/adminCategory",
             name: "Categories",
-            icon: <MdLibraryAdd />
+            icon: <MdLibraryAdd />,
+            roles: ["admin"]
         },
         {
             path: "/adminWallet",
             name: "Wallet",
-            icon: <GiWallet />
+            icon: <GiWallet />,
+            roles: ["admin"]
         },
         {
             path: "/adminPayHistory",
             name: "Payment History",
-            icon: <LuListChecks />
+            icon: <LuListChecks />,
+            roles: ["admin"]
         },
         {
             path: "/adminOrderStatus",
             name: "Order Status",
-            icon: <BsFillBagCheckFill />
+            icon: <BsFillBagCheckFill />,
+            roles: ["admin", "delivery boy"]
         },
         {
             name: "Logout",
@@ -93,13 +109,13 @@ const AdminSidebar = ({ children }) => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("role");
                 navigate("/adminLogin");
-            }
+            },
+            roles: ["admin", "delivery boy"]
         },
-    ];
-
+    ].filter(item => item.roles.includes(role));
 
     return (
-        <div className="flex w-full bg-fixed" style={{backgroundImage: `url(${bg})`, backgroundRepeat: "no-repeat", backgroundSize: "cover",}}>
+        <div className="flex w-full bg-fixed" style={{ backgroundImage: `url(${bg})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", }}>
             <div
                 style={{
                     width: isOpen ? (isMobile ? "100%" : "250px") : "40px",
@@ -119,7 +135,7 @@ const AdminSidebar = ({ children }) => {
                             <NavLink
                                 to={item.path}
                                 key={index}
-                                className="link flex items-center py-[8px] px-[18px] gap-[15px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-4 "
+                                className="link flex items-center py-[2px] px-[18px] gap-[15px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-4 "
                                 activeClassName="active"
                                 style={{ justifyContent: isOpen ? "start" : "center" }}
                                 onClick={handleMenuClick}
@@ -135,7 +151,7 @@ const AdminSidebar = ({ children }) => {
                                 }}
                                 key={index}
                                 className="link flex items-center py-[10px] px-[18px] gap-[15px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-5"
-                                style={{ justifyContent: isOpen ? "start" : "center", width: '100%',  border: 'none', cursor: 'pointer' }}
+                                style={{ justifyContent: isOpen ? "start" : "center", width: '100%', border: 'none', cursor: 'pointer' }}
                             >
                                 <div className="icon" style={{ fontSize: isOpen ? "25px" : "20px" }}>{item.icon}</div>
                                 <div style={{ display: isOpen ? "block" : "none", }} className="link_text text-md text-white font-semibold hover:text-white">{item.name}</div>
@@ -144,7 +160,7 @@ const AdminSidebar = ({ children }) => {
                     ))
                 }
             </div>
-            <div className={`main-container w-full transition-all duration-500 ${isOpen && isMobile ? 'hidden' : ''}`} style={{ overflowY: "auto", marginLeft: isOpen && !isMobile ? "250px" : "40px",  }}>
+            <div className={`main-container w-full transition-all duration-500 ${isOpen && isMobile ? 'hidden' : ''}`} style={{ overflowY: "auto", marginLeft: isOpen && !isMobile ? "250px" : "40px", }}>
                 <main className='w-full'>{children}</main>
             </div>
         </div>

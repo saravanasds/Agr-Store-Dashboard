@@ -170,7 +170,7 @@ const ProductList = () => {
               <tr>
                 <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Sl.no</th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Image</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Product Id</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Product Code</th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Name</th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Description</th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Category</th>
@@ -186,7 +186,7 @@ const ProductList = () => {
                   <td className="px-6 py-4 flex justify-center items-center">
                     <img src={product.productImage || ''} alt={product.productName || 'Product Image'} className='h-16 object-cover' />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productId || 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productCode || 'N/A'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productName || 'N/A'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.description || 'N/A'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.category || 'N/A'}</td>

@@ -28,10 +28,19 @@ const AdminLogin = ({ setRole }) => {
             const data = await response.json();
             if (response.ok) {
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('adminRole', data.role);
+                localStorage.setItem('role', data.data.role);
+                console.log(data.data.role);
                 setMessage('Login successful');
-                setRole('admin');
-                navigate("/adminDashboard");
+                setRole(data.data.role);
+
+                // Navigate based on role
+                if (data.data.role === 'admin') {
+                    navigate("/adminDashboard");
+                } else if (data.data.role === 'delivery boy') {
+                    navigate("/adminOrderStatus");
+                } else {
+                    setMessage('Unauthorized role'); // Handle any unexpected roles
+                }
             } else {
                 setMessage(data.message);
             }
@@ -46,10 +55,10 @@ const AdminLogin = ({ setRole }) => {
         <div className='w-full h-[100vh] bg-gray-950 flex flex-col justify-center items-center gap-3 p-10'>
             <form onSubmit={handleSubmit} className='min-h-[50vh] flex flex-col justify-center items-center w-full md:w-[40%] gap-3 p-5 rounded-xl' style={{ boxShadow: "0px 0px 12px cyan" }}>
                 <h2 className='text-3xl font-bold tracking-wider mb-4 text-gray-300 uppercase'>Admin Login</h2>
-                <input type="email" name="email" placeholder='Email' className='w-full md:w-[80%] p-3 rounded border-none outline-none' required onChange={handleChange} value={formData.email}/>
-                <input type="password" name="password" placeholder='Password' className='w-full md:w-[80%] p-3 rounded border-none outline-none' required onChange={handleChange} value={formData.password}/>
+                <input type="email" name="email" placeholder='Email' className='w-full md:w-[80%] p-3 rounded border-none outline-none' required onChange={handleChange} value={formData.email} />
+                <input type="password" name="password" placeholder='Password' className='w-full md:w-[80%] p-3 rounded border-none outline-none' required onChange={handleChange} value={formData.password} />
                 <button type='submit' className='w-full md:w-[80%] bg-cyan-700 py-3 px-10 rounded font-semibold text-white flex justify-center items-center hover:bg-cyan-800 border uppercase tracking-widest'>
-                    {loading ? <ClipLoader color="#ffffff" size={24} /> : 'Login'} 
+                    {loading ? <ClipLoader color="#ffffff" size={24} /> : 'Login'}
                 </button>
             </form>
             {message && <p className='text-white'>{message}</p>}
@@ -65,4 +74,4 @@ const AdminLogin = ({ setRole }) => {
     )
 }
 
-export default AdminLogin
+export default AdminLogin;

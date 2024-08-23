@@ -5,6 +5,7 @@ import axios from 'axios';
 const AddProduct = () => {
   const [department, setDepartment] = useState('');
   const [vendorEmail, setVendorEmail] = useState('');
+  const [shopName, setShopName] = useState('');
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState('');
   const [productName, setProductName] = useState('');
@@ -24,8 +25,11 @@ const AddProduct = () => {
     setDepartment(vendorDepartment);
 
     const vendorCommission = localStorage.getItem("vendorCommision");
-    console.log("Vendor Commission:", vendorCommission); // Add this line to debug
     setCommissionPercent(parseFloat(vendorCommission) || 0);
+
+    const shopName = localStorage.getItem("shopName");
+    console.log(shopName);
+    setShopName(shopName);
 
 
     const fetchCategories = async () => {
@@ -79,6 +83,7 @@ const AddProduct = () => {
     const formData = new FormData();
     formData.append('vendorEmail', vendorEmail);
     formData.append('department', department);
+    formData.append('shopName', shopName);
     formData.append('productName', productName);
     formData.append('category', category);
     formData.append('description', description);

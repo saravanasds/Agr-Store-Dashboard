@@ -34,6 +34,7 @@ const VendorLogin = ({ setRole }) => {
                 localStorage.setItem('role', data.data.role);
                 localStorage.setItem('vendorDepartment', data.data.department);
                 localStorage.setItem('vendorCommision', data.data.vendorCommision);
+                localStorage.setItem('shopName', data.data.shopName);
                 setMessage('Login successful');
                 setRole('vendor');
                 navigate("/vendorDashboard");

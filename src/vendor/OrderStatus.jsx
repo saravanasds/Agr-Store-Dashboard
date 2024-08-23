@@ -31,21 +31,25 @@ const OrderStatus = () => {
     <table className="min-w-full bg-white">
       <thead>
         <tr>
-          <th className="py-2">Product</th>
-          <th className="py-2">Status</th>
-          <th className="py-2">Price</th>
+          <th className="py-2">Sl.no</th>
+          <th className="py-2">Product Code</th>
+          <th className="py-2">Product</th>         
           <th className="py-2">Quantity</th>
+          <th className="py-2">Price</th>
           <th className="py-2">Time</th>
+          <th className="py-2">Status</th>
         </tr>
       </thead>
       <tbody>
-        {filteredOrders.map((order) => (
+        {filteredOrders.map((order, index) => (
           <tr key={order.productId} className="border-b">
-            <td className="py-2 text-center">{order.productName}</td>
-            <td className="py-2 text-center">{order.orderStatus}</td>
-            <td className="py-2 text-center">{order.price}</td>
+            <td className="py-2 text-center">{index + 1}</td>
+            <td className="py-2 text-center">{order.productCode}</td>
+            <td className="py-2 text-center">{order.productName}</td>           
             <td className="py-2 text-center">{order.quantity}</td>
-            <td className="py-2 text-center">{order.time}</td>
+            <td className="py-2 text-center">{order.price}</td>           
+            <td className="py-2 text-center">{new Date(order.createdAt).toLocaleString()}</td>
+            <td className="py-2 text-center">{order.orderStatus}</td>
           </tr>
         ))}
       </tbody>

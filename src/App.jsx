@@ -8,7 +8,6 @@ import SalesList from "./vendor/SalesList.jsx";
 import OrderStatus from "./vendor/OrderStatus.jsx";
 import VendorLogin from "./components/VendorLogin.jsx";
 
-
 // Admin
 import AdminRegister from "./components/AdminRegister.jsx";
 import AdminLogin from "./components/AdminLogin.jsx";
@@ -22,6 +21,7 @@ import PaymentHistory from "./admin/PaymentHistory.jsx";
 import AdminOrderStatus from "./admin/AdminOrderStatus.jsx";
 import Department from "./admin/Department.jsx";
 import Category from "./admin/Category.jsx";
+import AdminDetails from "./admin/AdminDetails.jsx";
 
 function App() {
   const [role, setRole] = useState(localStorage.getItem("role"));
@@ -40,12 +40,10 @@ function App() {
     }
   }, []); // Load the role from local storage when the component mounts
 
-
   return (
     <Router>
       <Routes>
         <Route path="/" element={<VendorLogin setRole={handleSetRole} />} />
-        <Route path="/adminRegister" element={<AdminRegister />} />
         <Route path="/adminLogin" element={<AdminLogin setRole={handleSetRole} />} />
       </Routes>
 
@@ -61,24 +59,28 @@ function App() {
         </VendorSidebar>
       )}
 
-      {role === "admin" && (
-        <AdminSidebar>
+      {(role === "admin" || role === "delivery boy") && (
+        <AdminSidebar role={role}>
           <Routes>
-            <Route path="/adminDashboard" element={<AdminOverview />} />
-            <Route path="/membersDetails" element={<MemberDetails />} />
-            <Route path="/vendorDetails" element={<VendorDetails />} />
-            <Route path="/addNewVendor" element={<AddNewVendor />} />
-            <Route path="/adminDepartment" element={<Department />} />
-            <Route path="/adminCategory" element={<Category />} />
-            <Route path="/adminWallet" element={<AdminWallet />} />
-            <Route path="/adminPayHistory" element={<PaymentHistory />} />
+            {role === "admin" && (
+              <>
+                <Route path="/adminRegister" element={<AdminRegister />} />
+                <Route path="/adminDashboard" element={<AdminOverview />} />
+                <Route path="/adminDetails" element={<AdminDetails />} />
+                <Route path="/membersDetails" element={<MemberDetails />} />
+                <Route path="/vendorDetails" element={<VendorDetails />} />
+                <Route path="/addNewVendor" element={<AddNewVendor />} />
+                <Route path="/adminDepartment" element={<Department />} />
+                <Route path="/adminCategory" element={<Category />} />
+                <Route path="/adminWallet" element={<AdminWallet />} />
+                <Route path="/adminPayHistory" element={<PaymentHistory />} />
+              </>
+            )}
             <Route path="/adminOrderStatus" element={<AdminOrderStatus />} />
           </Routes>
         </AdminSidebar>
       )}
-
     </Router>
-
   );
 }
 
