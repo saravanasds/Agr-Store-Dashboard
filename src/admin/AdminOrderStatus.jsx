@@ -5,11 +5,12 @@ import axios from 'axios';
 const AdminOrderStatus = () => {
   const [activeTab, setActiveTab] = useState('current');
   const [orders, setOrders] = useState([]);
+  const [openOrders, setOpenOrders] = useState(new Set()); // Use Set for tracking open orders
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/order/getAllOrders`);
+        const response = await axios.get('http://localhost:5000/api/order/getAllOrders');
         setOrders(response.data.orders);
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -19,10 +20,42 @@ const AdminOrderStatus = () => {
     fetchOrders();
   }, [activeTab]);
 
-  const toggleAccordion = (index) => {
-    const newOrders = [...orders];
-    newOrders[index].isOpen = !newOrders[index].isOpen;
-    setOrders(newOrders);
+  const toggleAccordion = (orderId) => {
+    setOpenOrders(prevOpenOrders => {
+      const newOpenOrders = new Set(prevOpenOrders);
+      if (newOpenOrders.has(orderId)) {
+        newOpenOrders.delete(orderId); // Close if already open
+      } else {
+        newOpenOrders.add(orderId); // Open if not already open
+      }
+      return newOpenOrders;
+    });
+  };
+
+  const updateOrderStatus = async (orderId, status, index) => {
+    try {
+      await axios.put(`http://localhost:5000/api/order/updateOrderStatus/${orderId}`, { orderStatus: status });
+      const updatedOrders = orders.map((order, i) =>
+        i === index ? { ...order, orderStatus: status } : order
+      );
+      setOrders(updatedOrders);
+      window.alert(`Order status updated to ${status}`);
+    } catch (error) {
+      console.error(`Error updating order status to ${status}:`, error);
+    }
+  };
+
+  const formatDate = (date) => {
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
+    const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
+    return formattedDate;
   };
 
   const renderTable = (filteredOrders) => (
@@ -36,13 +69,13 @@ const AdminOrderStatus = () => {
           <th className="py-2">Mobile Number</th>
           <th className="py-2">Total Amount</th>
           <th className="py-2">Status</th>
-          <th className="py-2">Time</th>
+          <th className="py-2">Action</th>
         </tr>
       </thead>
       <tbody>
         {filteredOrders.map((order, index) => (
           <React.Fragment key={order._id}>
-            <tr className="border-b cursor-pointer" onClick={() => toggleAccordion(index)}>
+            <tr className="border-b cursor-pointer" onClick={() => toggleAccordion(order._id)}>
               <td className="py-2 text-center">{index + 1}</td>
               <td className="py-2 text-center">{order.name}</td>
               <td className="py-2 text-center">{order.address}</td>
@@ -50,15 +83,43 @@ const AdminOrderStatus = () => {
               <td className="py-2 text-center">{order.mobileNumber}</td>
               <td className="py-2 text-center">{order.totalAmount}</td>
               <td className="py-2 text-center">{order.orderStatus}</td>
-              <td className="py-2 text-center">{new Date(order.createdAt).toLocaleString()}</td>
+              <td className="py-2 text-center">
+                {activeTab === 'current' && order.orderStatus === 'Processing' ? (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateOrderStatus(order._id, 'Completed', index);
+                      }}
+                      className='bg-green-500 text-xs text-white font-semibold py-1 px-3 rounded-md mr-2'
+                    >
+                      Complete
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateOrderStatus(order._id, 'Canceled', index);
+                      }}
+                      className='bg-gray-500 text-xs text-white font-semibold py-1 px-3 rounded-md'
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ):<div className='text-sm text-gray-400 font-semibold'>Updated</div>}
+              </td>
             </tr>
-            {order.isOpen && (
+            {openOrders.has(order._id) && (
               <tr>
                 <td colSpan="8">
-                  <div className="p-4 bg-gray-100">
+                  <div className="p-1 bg-gray-200 border border-gray-700">
+                    <div className='w-full flex justify-between items-center px-10 py-2 text-sm'>
+                      <h1><strong>Order Id: </strong> #{order._id}</h1>
+                      <h1><strong>Time: </strong> {formatDate(new Date(order.createdAt))}</h1>
+                    </div>
                     <table className="min-w-full bg-white">
                       <thead>
                         <tr>
+                          <th className="py-2">Sl.no</th>
                           <th className="py-2">Product Code</th>
                           <th className="py-2">Product</th>
                           <th className="py-2">Shop</th>
@@ -67,8 +128,9 @@ const AdminOrderStatus = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {order.products.map(product => (
-                          <tr key={product.productId} className="border-b">
+                        {order.products.map((product, i) => (
+                          <tr key={product.productId || i} className="border-b">
+                            <td className="py-2 text-center">{i + 1}</td>
                             <td className="py-2 text-center">{product.productCode}</td>
                             <td className="py-2 text-center">{product.productName}</td>
                             <td className="py-2 text-center">{product.shopName}</td>
@@ -90,6 +152,7 @@ const AdminOrderStatus = () => {
 
   const currentOrders = orders.filter(order => order.orderStatus === 'Processing');
   const completedOrders = orders.filter(order => order.orderStatus === 'Completed');
+  const canceledOrders = orders.filter(order => order.orderStatus === 'Canceled');
 
   return (
     <div className='w-full min-h-screen'>
@@ -114,10 +177,18 @@ const AdminOrderStatus = () => {
           >
             Completed Orders
           </button>
+          <button
+            onClick={() => setActiveTab('canceled')}
+            className={`py-2 px-4 rounded ${activeTab === 'canceled' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}
+          >
+            Canceled Orders
+          </button>
         </div>
 
         <div className="bg-white shadow rounded-lg p-4">
-          {activeTab === 'current' ? renderTable(currentOrders) : renderTable(completedOrders)}
+          {activeTab === 'current' && renderTable(currentOrders)}
+          {activeTab === 'completed' && renderTable(completedOrders)}
+          {activeTab === 'canceled' && renderTable(canceledOrders)}
         </div>
       </div>
     </div>

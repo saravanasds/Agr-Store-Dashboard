@@ -55,11 +55,11 @@ const VendorSidebar = ({ children }) => {
             name: "Add Product",
             icon: <MdLibraryAdd />
         },
-        // {
-        //     path: "/vendorWallet",
-        //     name: "Wallet",
-        //     icon: <GiWallet />
-        // },
+        {
+            path: "/vendorWallet",
+            name: "Wallet",
+            icon: <GiWallet />
+        },
         {
             path: "/salesList",
             name: "Sales List",
@@ -76,6 +76,7 @@ const VendorSidebar = ({ children }) => {
             action: () => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("role");
+                localStorage.removeItem("vendorEmail");
                 navigate("/");
             }
         },

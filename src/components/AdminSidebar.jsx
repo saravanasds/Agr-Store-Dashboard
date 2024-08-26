@@ -85,6 +85,12 @@ const AdminSidebar = ({ children, role }) => {
             roles: ["admin"]
         },
         {
+            path: "/adminProducts",
+            name: "Products",
+            icon: <MdLibraryAdd />,
+            roles: ["admin", "delivery boy"]
+        },
+        {
             path: "/adminWallet",
             name: "Wallet",
             icon: <GiWallet />,

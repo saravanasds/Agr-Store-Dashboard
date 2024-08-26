@@ -6,10 +6,14 @@ const OrderStatus = () => {
   const [activeTab, setActiveTab] = useState('current'); // State to manage active tab
   const [orders, setOrders] = useState([]);
   const [vendorEmail, setVendorEmail] = useState(''); // Replace with the actual vendorEmail
+  const [commission, setCommission] = useState('');
 
   useEffect(() => {
     const vendorEmail = localStorage.getItem("vendorEmail");
     setVendorEmail(vendorEmail);
+
+    const vendorCommission = localStorage.getItem("vendorCommision");
+    setCommission(parseFloat(vendorCommission));
   }, []);
 
   useEffect(() => {
@@ -27,16 +31,32 @@ const OrderStatus = () => {
 
   console.log(orders);
 
+  const formatDate = (date) => {
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
+    const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
+    return formattedDate;
+  };
+
+
   const renderTable = (filteredOrders) => (
     <table className="min-w-full bg-white">
       <thead>
         <tr>
           <th className="py-2">Sl.no</th>
           <th className="py-2">Product Code</th>
-          <th className="py-2">Product</th>         
+          <th className="py-2">Product</th>
           <th className="py-2">Quantity</th>
           <th className="py-2">Price</th>
-          <th className="py-2">Time</th>
+          {activeTab === "current" ? "" : <th className="py-2">Commission</th>}
+          {activeTab === "current" ? "" : <th className="py-2">Balance</th>}
+          {activeTab === "current" ? <th className="py-2">Time</th> : ""}
           <th className="py-2">Status</th>
         </tr>
       </thead>
@@ -45,10 +65,12 @@ const OrderStatus = () => {
           <tr key={order.productId} className="border-b">
             <td className="py-2 text-center">{index + 1}</td>
             <td className="py-2 text-center">{order.productCode}</td>
-            <td className="py-2 text-center">{order.productName}</td>           
+            <td className="py-2 text-center">{order.productName}</td>
             <td className="py-2 text-center">{order.quantity}</td>
-            <td className="py-2 text-center">{order.price}</td>           
-            <td className="py-2 text-center">{new Date(order.createdAt).toLocaleString()}</td>
+            <td className="py-2 text-center">&#x20B9; {order.total}</td>
+            {activeTab === "current" ? "" : <td className="py-2 text-center">&#x20B9; {(order.total * commission) / 100}</td>}
+            {activeTab === "current" ? "" : <td className="py-2 text-center">&#x20B9; {order.total - (order.total * commission) / 100}</td>}
+            {activeTab === "current" ? <td className="py-2 text-center">{formatDate(new Date(order.createdAt))}</td> : ""}
             <td className="py-2 text-center">{order.orderStatus}</td>
           </tr>
         ))}
