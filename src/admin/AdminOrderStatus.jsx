@@ -68,87 +68,99 @@ const AdminOrderStatus = () => {
           <th className="py-2">Pincode</th>
           <th className="py-2">Mobile Number</th>
           <th className="py-2">Total Amount</th>
+          {activeTab === "completed" ? <th className="py-2">Total Balance</th> : ""}
           <th className="py-2">Status</th>
           <th className="py-2">Action</th>
         </tr>
       </thead>
       <tbody>
-        {filteredOrders.map((order, index) => (
-          <React.Fragment key={order._id}>
-            <tr className="border-b cursor-pointer" onClick={() => toggleAccordion(order._id)}>
-              <td className="py-2 text-center">{index + 1}</td>
-              <td className="py-2 text-center">{order.name}</td>
-              <td className="py-2 text-center">{order.address}</td>
-              <td className="py-2 text-center">{order.pincode}</td>
-              <td className="py-2 text-center">{order.mobileNumber}</td>
-              <td className="py-2 text-center">{order.totalAmount}</td>
-              <td className="py-2 text-center">{order.orderStatus}</td>
-              <td className="py-2 text-center">
-                {activeTab === 'current' && order.orderStatus === 'Processing' ? (
-                  <>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        updateOrderStatus(order._id, 'Completed', index);
-                      }}
-                      className='bg-green-500 text-xs text-white font-semibold py-1 px-3 rounded-md mr-2'
-                    >
-                      Complete
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        updateOrderStatus(order._id, 'Canceled', index);
-                      }}
-                      className='bg-gray-500 text-xs text-white font-semibold py-1 px-3 rounded-md'
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ):<div className='text-sm text-gray-400 font-semibold'>Updated</div>}
-              </td>
-            </tr>
-            {openOrders.has(order._id) && (
-              <tr>
-                <td colSpan="8">
-                  <div className="p-1 bg-gray-200 border border-gray-700">
-                    <div className='w-full flex justify-between items-center px-10 py-2 text-sm'>
-                      <h1><strong>Order Id: </strong> #{order._id}</h1>
-                      <h1><strong>Time: </strong> {formatDate(new Date(order.createdAt))}</h1>
-                    </div>
-                    <table className="min-w-full bg-white">
-                      <thead>
-                        <tr>
-                          <th className="py-2">Sl.no</th>
-                          <th className="py-2">Product Code</th>
-                          <th className="py-2">Product</th>
-                          <th className="py-2">Shop</th>
-                          <th className="py-2">Quantity</th>
-                          <th className="py-2">Price</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {order.products.map((product, i) => (
-                          <tr key={product.productId || i} className="border-b">
-                            <td className="py-2 text-center">{i + 1}</td>
-                            <td className="py-2 text-center">{product.productCode}</td>
-                            <td className="py-2 text-center">{product.productName}</td>
-                            <td className="py-2 text-center">{product.shopName}</td>
-                            <td className="py-2 text-center">{product.quantity}</td>
-                            <td className="py-2 text-center">{product.total}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+        {filteredOrders.reverse().map((order, index) => {  // Reverse the order here
+          const totalOrderBalance = order.products.reduce((total, product) => total + parseFloat(product.balance), 0);
+
+          return (
+            <React.Fragment key={order._id}>
+              <tr className="border-b cursor-pointer" onClick={() => toggleAccordion(order._id)}>
+                <td className="py-2 text-center">{index + 1}</td>
+                <td className="py-2 text-center">{order.name}</td>
+                <td className="py-2 text-center">{order.address}</td>
+                <td className="py-2 text-center">{order.pincode}</td>
+                <td className="py-2 text-center">{order.mobileNumber}</td>
+                <td className="py-2 text-center">{order.totalAmount}</td>
+                {activeTab === "completed" ? <td className="py-2 text-center">&#x20B9; {totalOrderBalance}</td> : ""}
+                <td className="py-2 text-center">{order.orderStatus}</td>
+                <td className="py-2 text-center">
+                  {activeTab === 'current' && order.orderStatus === 'Processing' ? (
+                    <>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          updateOrderStatus(order._id, 'Completed', index);
+                        }}
+                        className='bg-green-500 text-xs text-white font-semibold py-1 px-3 rounded-md mr-2'
+                      >
+                        Complete
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          updateOrderStatus(order._id, 'Canceled', index);
+                        }}
+                        className='bg-gray-500 text-xs text-white font-semibold py-1 px-3 rounded-md'
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : <div className='text-sm text-gray-400 font-semibold'>Updated</div>}
                 </td>
               </tr>
-            )}
-          </React.Fragment>
-        ))}
+              {openOrders.has(order._id) && (
+                <tr>
+                  <td colSpan="9">
+                    <div className="p-1 bg-gray-200 border border-gray-700">
+                      <div className='w-full flex justify-between items-center px-10 py-2 text-sm'>
+                        <h1><strong>Order Id: </strong> #{order._id}</h1>
+                        <h1><strong>Time: </strong> {formatDate(new Date(order.createdAt))}</h1>
+                      </div>
+                      <table className="min-w-full bg-white">
+                        <thead>
+                          <tr>
+                            <th className="py-2">Sl.no</th>
+                            <th className="py-2">Product Code</th>
+                            <th className="py-2">Product</th>
+                            <th className="py-2">Shop</th>
+                            <th className="py-2">Quantity</th>
+                            <th className="py-2">Price</th>
+                            {activeTab === "completed" ? <th className="py-2">Commission</th> : ""}
+                            {activeTab === "completed" ? <th className="py-2">Balance</th> : ""}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {order.products.map((product, i) => (
+                            <tr key={product.productId || i} className="border-b">
+                              <td className="py-2 text-center">{i + 1}</td>
+                              <td className="py-2 text-center">{product.productCode}</td>
+                              <td className="py-2 text-center">{product.productName}</td>
+                              <td className="py-2 text-center">{product.shopName}</td>
+                              <td className="py-2 text-center">{product.quantity}</td>
+                              <td className="py-2 text-center">{product.total}</td>
+                              {activeTab === "completed" ? <td className="py-2 text-center">&#x20B9; {(product.total * product.vendorCommission) / 100}</td> : " "}
+                              {activeTab === "completed" ? <td className="py-2 text-center">&#x20B9; {product.balance}</td> : ""}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
+          );
+        })}
       </tbody>
     </table>
   );
+
+
 
   const currentOrders = orders.filter(order => order.orderStatus === 'Processing');
   const completedOrders = orders.filter(order => order.orderStatus === 'Completed');

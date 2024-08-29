@@ -61,7 +61,7 @@ const OrderStatus = () => {
         </tr>
       </thead>
       <tbody>
-        {filteredOrders.map((order, index) => (
+        {filteredOrders.reverse().map((order, index) =>  (
           <tr key={order.productId} className="border-b">
             <td className="py-2 text-center">{index + 1}</td>
             <td className="py-2 text-center">{order.productCode}</td>
@@ -101,11 +101,15 @@ const OrderStatus = () => {
             Current Orders
           </button>
           <button
-            onClick={() => setActiveTab('completed')}
+            onClick={() => {
+              setActiveTab('completed');
+              // window.location.reload();
+            }}
             className={`py-2 px-4 rounded ${activeTab === 'completed' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}
           >
             Completed Orders
           </button>
+
         </div>
 
         <div className="bg-white shadow rounded-lg p-4">

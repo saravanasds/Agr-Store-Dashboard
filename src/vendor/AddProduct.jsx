@@ -11,6 +11,7 @@ const AddProduct = () => {
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
   const [unit, setUnit] = useState('');
+  const [actualPrice, setActualPrice] = useState('');
   const [price, setPrice] = useState('');
   const [commissionPercent, setCommissionPercent] = useState('');
   const [productImage, setProductImage] = useState(null);
@@ -80,15 +81,20 @@ const AddProduct = () => {
 
     setErrors({}); // Clear errors if validation passes
 
+    const balance = price - (price * commissionPercent) / 100;
+
     const formData = new FormData();
     formData.append('vendorEmail', vendorEmail);
+    formData.append('vendorCommission', commissionPercent);
     formData.append('department', department);
     formData.append('shopName', shopName);
     formData.append('productName', productName);
     formData.append('category', category);
     formData.append('description', description);
     formData.append('unit', unit);
+    formData.append('actualPrice', actualPrice);
     formData.append('price', price);
+    formData.append('balance', balance);
     if (productImage) {
       formData.append('productImage', productImage);
     }
@@ -196,8 +202,36 @@ const AddProduct = () => {
             </div>
 
             <div className="">
+              <label className="block text-gray-700 font-semibold mb-1" htmlFor="productImage">
+                Product Image
+              </label>
+              <input
+                type="file"
+                id="productImage"
+                name="productImage"
+                onChange={handleProductImageChange}
+                className="w-full border border-gray-300 rounded-md px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
+                required
+              />
+            </div>
+
+            <div className="">
+              <label className="block text-gray-700 font-semibold mb-1" htmlFor="actualPrice">
+                Actual Price
+              </label>
+              <input
+                type="number"
+                name="actualPrice"
+                id="actualPrice"
+                value={actualPrice}
+                onChange={(e) => setActualPrice(e.target.value)}
+                className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
+              />
+            </div>
+
+            <div className="">
               <label className="block text-gray-700 font-semibold mb-1" htmlFor="price">
-                Price
+                Sale Price
               </label>
               <input
                 type="number"
@@ -218,19 +252,6 @@ const AddProduct = () => {
               </span>
             </div>
 
-            <div className="">
-              <label className="block text-gray-700 font-semibold mb-1" htmlFor="productImage">
-                Product Image
-              </label>
-              <input
-                type="file"
-                id="productImage"
-                name="productImage"
-                onChange={handleProductImageChange}
-                className="w-full border border-gray-300 rounded-md px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
-                required
-              />
-            </div>
 
             <div className="">
               <label className="block text-gray-700 font-semibold mb-1" htmlFor="com">
@@ -238,6 +259,15 @@ const AddProduct = () => {
               </label>
               <span className="block border border-gray-300 rounded-md py-2 px-3 text-gray-700">
                 &#x20B9; {(price * commissionPercent) / 100}
+              </span>
+            </div>
+
+            <div className="">
+              <label className="block text-gray-700 font-semibold mb-1" htmlFor="com">
+                Balance (amt)
+              </label>
+              <span className="block border border-gray-300 rounded-md py-2 px-3 text-gray-700">
+                &#x20B9; {price - (price * commissionPercent) / 100}
               </span>
             </div>
           </div>
@@ -260,7 +290,13 @@ const AddProduct = () => {
                     {description && (<p className='mb-2 text-center text-xs'>({description})</p>)}
                   </p>
 
-                  <p className='mb-2 text-center text-sm'><strong>Price: &#x20B9;</strong>  {price}  {unit ? `(${unit})` : ""}</p>
+                  <p className='mb-2 text-center text-sm'>
+                    <strong>Price: </strong>
+                    <span className="text-gray-500">
+                      <del>&#x20B9;{actualPrice}</del>
+                    </span>
+                    <span className='font-semibold text-lg'>&nbsp;&#x20B9;{price} </span>{unit ? `(${unit})` : ""}
+                  </p>
 
                 </div>
               </div>

@@ -5,7 +5,7 @@ import Overview from "./vendor/Overview.jsx";
 import ProductList from "./vendor/ProductList.jsx";
 import AddProduct from "./vendor/AddProduct.jsx";
 import SalesList from "./vendor/SalesList.jsx";
-import OrderStatus from "./vendor/OrderStatus.jsx";
+// import OrderStatus from "./vendor/OrderStatus.jsx";
 import VendorLogin from "./components/VendorLogin.jsx";
 
 // Admin
@@ -24,6 +24,9 @@ import Category from "./admin/Category.jsx";
 import AdminDetails from "./admin/AdminDetails.jsx";
 import Products from "./admin/Products.jsx";
 import Wallet from "./vendor/Wallet.jsx";
+import CompletedOrder from "./vendor/CompletedOrder.jsx";
+import CurrentOrder from "./vendor/CurrentOrder.jsx";
+import VendorBalanceTable from "./admin/VendorBalanceTable.jsx";
 
 function App() {
   const [role, setRole] = useState(localStorage.getItem("role"));
@@ -55,9 +58,11 @@ function App() {
             <Route path="/vendorDashboard" element={<Overview />} />
             <Route path="/productList" element={<ProductList />} />
             <Route path="/addProduct" element={<AddProduct />} />
+            <Route path="/completedOrders" element={<CompletedOrder />} />
+            <Route path="/currentOrders" element={<CurrentOrder />} />
             <Route path="/vendorWallet" element={<Wallet />} />
             <Route path="/salesList" element={<SalesList />} />
-            <Route path="/vendorOrderStatus" element={<OrderStatus />} />
+            {/* <Route path="/vendorOrderStatus" element={<OrderStatus />} /> */}
           </Routes>
         </VendorSidebar>
       )}
@@ -75,6 +80,7 @@ function App() {
                 <Route path="/addNewVendor" element={<AddNewVendor />} />
                 <Route path="/adminDepartment" element={<Department />} />
                 <Route path="/adminCategory" element={<Category />} />
+                <Route path="/vendorBalanceTable" element={<VendorBalanceTable />} />
                 <Route path="/adminWallet" element={<AdminWallet />} />
                 <Route path="/adminPayHistory" element={<PaymentHistory />} />
               </>

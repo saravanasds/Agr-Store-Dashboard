@@ -56,20 +56,30 @@ const VendorSidebar = ({ children }) => {
             icon: <MdLibraryAdd />
         },
         {
+            path: "/currentOrders",
+            name: "Current Orders",
+            icon: <LuListChecks />
+        },
+        {
+            path: "/completedOrders",
+            name: "Completed Orders",
+            icon: <LuListChecks />
+        },
+        {
             path: "/vendorWallet",
             name: "Wallet",
             icon: <GiWallet />
         },
-        {
-            path: "/salesList",
-            name: "Sales List",
-            icon: <LuListChecks />
-        },
-        {
-            path: "/vendorOrderStatus",
-            name: "Order Status",
-            icon: <BsFillBagCheckFill />
-        },
+        // {
+        //     path: "/salesList",
+        //     name: "Sales List",
+        //     icon: <LuListChecks />
+        // },
+        // {
+        //     path: "/vendorOrderStatus",
+        //     name: "Order Status",
+        //     icon: <BsFillBagCheckFill />
+        // },
         {
             name: "Logout",
             icon: <RiLogoutCircleRLine />,
@@ -77,6 +87,7 @@ const VendorSidebar = ({ children }) => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("role");
                 localStorage.removeItem("vendorEmail");
+                localStorage.removeItem("vendorCommision");
                 navigate("/");
             }
         },
