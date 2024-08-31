@@ -3,22 +3,52 @@ import axios from 'axios';
 import { VscAccount } from "react-icons/vsc";
 
 const VendorBalanceTable = () => {
-    const [vendorBalances, setVendorBalances] = useState([]);
+    const [vendors, setVendors] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [selectedVendor, setSelectedVendor] = useState(null);
+    const [paymentAmount, setPaymentAmount] = useState("");
+    const [transactionId, setTransactionId] = useState("");
+
 
     useEffect(() => {
-        const fetchVendorBalances = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/api/order/getVendorBalanceSums');
-                setVendorBalances(response.data);
-            } catch (error) {
-                console.error('Error fetching vendor balances:', error);
-            }
+        const fetchVendors = async () => {
+          try {
+            const response = await axios.get('http://localhost:5000/api/vendor/all');
+            setVendors(response.data);
+          } catch (err) {
+            setError('Error fetching vendors');
+          }
         };
+    
+        fetchVendors();
+      }, []);
+    
 
-        fetchVendorBalances();
-    }, []);
+    const handleOpen = (vendor) => {
+        setSelectedVendor(vendor);
+        setOpen(true);
+    };
 
-    console.log(vendorBalances);
+    const handleClose = () => {
+        setOpen(false);
+        setPaymentAmount("");
+        setTransactionId("");
+    };
+
+    const handleSubmit = async () => {
+        try {
+            // Example of sending payment details to backend
+            const response = await axios.post('http://localhost:5000/api/vendor/payVendor', {
+                shopName: selectedVendor.shopName,
+                paymentAmount,
+                transactionId
+            });
+            console.log('Payment successful:', response.data);
+            handleClose();
+        } catch (error) {
+            console.error('Error making payment:', error);
+        }
+    };
 
     return (
         <div className='w-full min-h-screen'>
@@ -35,18 +65,68 @@ const VendorBalanceTable = () => {
                         <th className="py-2 font-semibold tracking-wider">Sl.no</th>
                         <th className="py-2 font-semibold tracking-wider">ShopName</th>
                         <th className="py-2 font-semibold tracking-wider">Total Balance (&#x20B9;)</th>
+                        <th className="py-2 font-semibold tracking-wider">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {vendorBalances.map((balance, index) => (
-                        <tr key={balance.shopName} className="border-b border-gray-600">
+                    {vendors.map((vendor, index) => (
+                        <tr key={vendor.shopName} className="border-b border-gray-600">
                             <td className="py-2 text-center text-white">{index + 1}</td>
-                            <td className="py-2 text-center text-white">{balance.shopName}</td>
-                            <td className="py-2 text-center text-white">&#x20B9; {balance.totalBalance.toFixed(2)}</td>
+                            <td className="py-2 text-center text-white">{vendor.shopName}</td>
+                            <td className="py-2 text-center text-white">&#x20B9; {vendor.vendorBalance.toFixed(2)}</td>
+                            <td className="py-2 text-center text-white">
+                                <button
+                                    onClick={() => handleOpen(vendor)}
+                                    className='bg-blue-600 px-8 py-1 text-sm font-semibold rounded-sm hover:bg-blue-800'
+                                >
+                                    Pay
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+
+            {open && (
+                <div className='fixed inset-0 flex items-center justify-center z-50 bg-[rgba(0,0,0,0.2)] backdrop-blur-[2px]'>
+                    <div className='bg-white p-5 rounded shadow-lg w-[90%] max-w-md'>
+                        <h2 className='text-xl font-semibold mb-4'>Pay {selectedVendor.shopName}</h2>
+                        <div className='mb-4'>
+                            <label className='block text-sm font-medium mb-2'>Payment Amount (&#x20B9;)</label>
+                            <input
+                                type='number'
+                                placeholder={selectedVendor.vendorBalance}
+                                className='w-full p-2 border rounded'
+                                value={paymentAmount}
+                                onChange={(e) => setPaymentAmount(e.target.value)}
+                            />
+                        </div>
+                        <div className='mb-4'>
+                            <label className='block text-sm font-medium mb-2'>Transaction ID</label>
+                            <input
+                                type='text'
+                                className='w-full p-2 border rounded'
+                                value={transactionId}
+                                onChange={(e) => setTransactionId(e.target.value)}
+                            />
+                        </div>
+                        <div className='flex justify-end gap-4'>
+                            <button
+                                onClick={handleClose}
+                                className='bg-gray-300 px-4 py-2 rounded hover:bg-gray-400'
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleSubmit}
+                                className='bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800'
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
