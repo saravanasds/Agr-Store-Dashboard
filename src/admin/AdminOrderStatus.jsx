@@ -68,6 +68,7 @@ const AdminOrderStatus = () => {
           <th className="py-2">Pincode</th>
           <th className="py-2">Mobile Number</th>
           <th className="py-2">Total Amount</th>
+          <th className="py-2">Discount</th>
           {activeTab === "completed" ? <th className="py-2">Total Balance</th> : ""}
           <th className="py-2">Status</th>
           <th className="py-2">Action</th>
@@ -86,6 +87,7 @@ const AdminOrderStatus = () => {
                 <td className="py-2 text-center">{order.pincode}</td>
                 <td className="py-2 text-center">{order.mobileNumber}</td>
                 <td className="py-2 text-center">{order.totalAmount}</td>
+                <td className="py-2 text-center">{order.discount}</td>
                 {activeTab === "completed" ? <td className="py-2 text-center">&#x20B9; {totalOrderBalance}</td> : ""}
                 <td className="py-2 text-center">{order.orderStatus}</td>
                 <td className="py-2 text-center">
@@ -115,7 +117,7 @@ const AdminOrderStatus = () => {
               </tr>
               {openOrders.has(order._id) && (
                 <tr>
-                  <td colSpan="9">
+                  <td colSpan="10">
                     <div className="p-1 bg-gray-200 border border-gray-700">
                       <div className='w-full flex justify-between items-center px-10 py-2 text-sm'>
                         <h1><strong>Order Id: </strong> #{order._id}</h1>

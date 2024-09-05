@@ -6,7 +6,6 @@ const VendorBalanceTable = () => {
     const [vendors, setVendors] = useState([]);
     const [open, setOpen] = useState(false);
     const [selectedVendor, setSelectedVendor] = useState(null);
-    const [paymentAmount, setPaymentAmount] = useState("");
     const [transactionId, setTransactionId] = useState("");
 
 
@@ -31,16 +30,16 @@ const VendorBalanceTable = () => {
 
     const handleClose = () => {
         setOpen(false);
-        setPaymentAmount("");
         setTransactionId("");
     };
 
     const handleSubmit = async () => {
         try {
             // Example of sending payment details to backend
-            const response = await axios.post('http://localhost:5000/api/vendor/payVendor', {
+            const response = await axios.post('http://localhost:5000/api/admin/payVendor', {
+                vendorEmail: selectedVendor.vendorEmail,
                 shopName: selectedVendor.shopName,
-                paymentAmount,
+                paymentAmount: selectedVendor.vendorBalance,
                 transactionId
             });
             console.log('Payment successful:', response.data);
@@ -93,13 +92,7 @@ const VendorBalanceTable = () => {
                         <h2 className='text-xl font-semibold mb-4'>Pay {selectedVendor.shopName}</h2>
                         <div className='mb-4'>
                             <label className='block text-sm font-medium mb-2'>Payment Amount (&#x20B9;)</label>
-                            <input
-                                type='number'
-                                placeholder={selectedVendor.vendorBalance}
-                                className='w-full p-2 border rounded'
-                                value={paymentAmount}
-                                onChange={(e) => setPaymentAmount(e.target.value)}
-                            />
+                            <p>{selectedVendor.vendorBalance}</p>
                         </div>
                         <div className='mb-4'>
                             <label className='block text-sm font-medium mb-2'>Transaction ID</label>

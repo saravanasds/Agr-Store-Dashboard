@@ -10,8 +10,6 @@ const Dashboard = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [filter, setFilter] = useState({
     mobileNumber: '',
-    district: '',
-    constituency: ''
   });
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 20;
@@ -32,9 +30,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const filtered = users.filter(user =>
-      user.mobileNumber.includes(filter.mobileNumber) &&
-      user.district.toLowerCase().includes(filter.district.toLowerCase()) &&
-      user.constituency.toLowerCase().includes(filter.constituency.toLowerCase())
+      user.mobileNumber.includes(filter.mobileNumber)  
     );
     setFilteredUsers(filtered);
     setCurrentPage(1); // Reset to the first page when filter changes
@@ -97,22 +93,6 @@ const Dashboard = () => {
               onChange={handleFilterChange}
               className="px-4 py-2 border rounded mr-2 border-none outline-none w-full sm:w-auto"
             />
-            <input
-              type="text"
-              name="district"
-              placeholder="Filter by District"
-              value={filter.district}
-              onChange={handleFilterChange}
-              className="px-4 py-2 border rounded mr-2 border-none outline-none w-full sm:w-auto"
-            />
-            <input
-              type="text"
-              name="constituency"
-              placeholder="Filter by Constituency"
-              value={filter.constituency}
-              onChange={handleFilterChange}
-              className="px-4 py-2 border rounded mr-2 border-none outline-none w-full sm:w-auto"
-            />
           </div>
 
         </div>
@@ -124,7 +104,6 @@ const Dashboard = () => {
                 <th className="px-4 py-2 font-semibold">Member Id</th>
                 <th className="px-4 py-2 font-semibold">Name</th>
                 <th className="px-4 py-2 font-semibold">Mobile Number</th>
-                <th className="px-4 py-2 font-semibold">Constituency</th>
                 <th className="px-4 py-2 font-semibold">Registered On</th>
                 <th className="px-4 py-2 font-semibold">Referrals</th>
                 <th className="px-4 py-2 font-semibold">Actions</th>
@@ -137,7 +116,6 @@ const Dashboard = () => {
                   <td className="px-4 py-2 border-b border-gray-500">{user.referralId}</td>
                   <td className="px-4 py-2 border-b border-gray-500">{user.name}</td>
                   <td className="px-4 py-2 border-b border-gray-500">{user.mobileNumber}</td>
-                  <td className="px-4 py-2 border-b border-gray-500">{user.constituency}</td>
                   <td className="px-4 py-2 border-b border-gray-500">{formatDate(user.createdAt)}</td>
                   <td className="px-4 py-2 border-b border-gray-500">{user.referredPeoples.length}</td>
                   <td className="px-4 py-2 border-b border-gray-500">

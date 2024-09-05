@@ -70,11 +70,11 @@ const VendorSidebar = ({ children }) => {
             name: "Wallet",
             icon: <GiWallet />
         },
-        // {
-        //     path: "/salesList",
-        //     name: "Sales List",
-        //     icon: <LuListChecks />
-        // },
+        {
+            path: "/vendorPayHistory",
+            name: "Payment History",
+            icon: <LuListChecks />
+        },
         // {
         //     path: "/vendorOrderStatus",
         //     name: "Order Status",

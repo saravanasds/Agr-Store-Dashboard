@@ -13,6 +13,13 @@ const AdminOverview = () => {
   const [vendors, setVendors] = useState([]);
   const [users, setUsers] = useState([]);
   const [products, setProducts] = useState([]);
+  const [soldProducts, setSoldProducts] = useState([]);
+  const [totalSaleAmount, setTotalSaleAmount] = useState("");
+  const [totalCommission, setTotalCommission] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [userShare, setUserShare] = useState(0);
+  const [usedUserShare, setUsedUserShare] = useState('');
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -44,19 +51,75 @@ const AdminOverview = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-        try {
-            const response = await axios.get('http://localhost:5000/api/vendor/getAllProducts');
-            setProducts(response.data);
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        }
+      try {
+        const response = await axios.get('http://localhost:5000/api/vendor/getAllProducts');
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
     };
 
     fetchProducts();
-}, []);
+  }, []);
 
+  useEffect(() => {
+    const fetchSoldProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/order/getAllSoldProducts');
+        const products = response.data.soldProducts;
 
+        setSoldProducts(products);
 
+        // Calculate the total sale amount
+        const totalSaleAmount = products.reduce((acc, product) => acc + product.total, 0);
+        setTotalSaleAmount(totalSaleAmount);
+
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
+
+    fetchSoldProducts();
+  }, []);
+
+  useEffect(() => {
+    const fetchCommissions = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/admin/getVendorCommissions');
+        const totalComm = response.data.totalCommission;
+
+        const userComm = totalComm * 0.2; // 20% of total commission
+        const totalBal = totalComm - userComm;
+
+        setTotalCommission(totalComm);
+        setUserShare(userComm);
+        setTotalBalance(totalBal);
+      } catch (err) {
+        console.error('Error fetching commissions:', err);
+      }
+    };
+
+    fetchCommissions();
+  }, []);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/order/getAllOrders');
+        const orders = response.data.orders;
+        console.log(orders);
+
+        // Calculate the total sale amount
+        const totalUsedUserShare = orders.reduce((acc, order) => acc + order.discount, 0);
+        setUsedUserShare(totalUsedUserShare);
+
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
 
 
   return (
@@ -99,8 +162,16 @@ const AdminOverview = () => {
 
           <div className='rounded-lg py-5 flex justify-around items-center px-4 bg-[rgba(0,0,0,0.3)] shadow-sm shadow-black border border-cyan-400'>
             <div>
-              <p className='text-md sm:text-2xl font-semibold text-white tracking-wider' style={{ textShadow: "2px 2px 0px black" }}>Total Received Amount</p>
-              <p className='text-xl sm:text-2xl font-semibold text-center'></p>
+              <p className='text-md sm:text-2xl font-semibold text-white tracking-wider' style={{ textShadow: "2px 2px 0px black" }}>Total Sales</p>
+              <p className='text-xl sm:text-2xl font-semibold text-center text-white'>{soldProducts.length}</p>
+            </div>
+            <div><TbPigMoney className='text-[40px] md:text-[65px] opacity-80 text-orange-400' /></div>
+          </div>
+
+          <div className='rounded-lg py-5 flex justify-around items-center px-4 bg-[rgba(0,0,0,0.3)] shadow-sm shadow-black border border-cyan-400'>
+            <div>
+              <p className='text-md sm:text-2xl font-semibold text-white tracking-wider' style={{ textShadow: "2px 2px 0px black" }}>Total Sale Amount</p>
+              <p className='text-xl sm:text-2xl font-semibold text-center text-white'>{totalSaleAmount || 0}</p>
             </div>
             <div><TbPigMoney className='text-[40px] md:text-[65px] opacity-80 text-orange-400' /></div>
           </div>
@@ -108,7 +179,31 @@ const AdminOverview = () => {
           <div className='rounded-lg py-5 flex justify-around items-center px-4 bg-[rgba(0,0,0,0.3)] shadow-sm shadow-black border border-cyan-400'>
             <div>
               <p className='text-md sm:text-2xl font-semibold text-white tracking-wider' style={{ textShadow: "2px 2px 0px black" }}>Total Commision</p>
-              <p className='text-xl sm:text-2xl font-semibold text-center'></p>
+              <p className='text-xl sm:text-2xl font-semibold text-center text-white'>{totalCommission.toFixed(2)}</p>
+            </div>
+            <div><GiTakeMyMoney className='text-[40px] md:text-[65px] opacity-80 text-blue-500' /></div>
+          </div>
+
+          <div className='rounded-lg py-5 flex justify-around items-center px-4 bg-[rgba(0,0,0,0.3)] shadow-sm shadow-black border border-cyan-400'>
+            <div>
+              <p className='text-md sm:text-2xl font-semibold text-white tracking-wider' style={{ textShadow: "2px 2px 0px black" }}>Admin Share (80%)</p>
+              <p className='text-xl sm:text-2xl font-semibold text-center text-white'>{totalBalance.toFixed(2)}</p>
+            </div>
+            <div><GiTakeMyMoney className='text-[40px] md:text-[65px] opacity-80 text-blue-500' /></div>
+          </div>
+
+          <div className='rounded-lg py-5 flex justify-around items-center px-4 bg-[rgba(0,0,0,0.3)] shadow-sm shadow-black border border-cyan-400'>
+            <div>
+              <p className='text-md sm:text-2xl font-semibold text-white tracking-wider' style={{ textShadow: "2px 2px 0px black" }}>User Share (20%)</p>
+              <p className='text-xl sm:text-2xl font-semibold text-center text-white'>{userShare.toFixed(2)}</p>
+            </div>
+            <div><GiTakeMyMoney className='text-[40px] md:text-[65px] opacity-80 text-blue-500' /></div>
+          </div> 
+
+          <div className='rounded-lg py-5 flex justify-around items-center px-4 bg-[rgba(0,0,0,0.3)] shadow-sm shadow-black border border-cyan-400'>
+            <div>
+              <p className='text-md sm:text-2xl font-semibold text-white tracking-wider' style={{ textShadow: "2px 2px 0px black" }}>Used User Share</p>
+              <p className='text-xl sm:text-2xl font-semibold text-center text-white'>{usedUserShare}</p>
             </div>
             <div><GiTakeMyMoney className='text-[40px] md:text-[65px] opacity-80 text-blue-500' /></div>
           </div>

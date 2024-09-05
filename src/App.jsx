@@ -7,6 +7,7 @@ import AddProduct from "./vendor/AddProduct.jsx";
 import SalesList from "./vendor/SalesList.jsx";
 // import OrderStatus from "./vendor/OrderStatus.jsx";
 import VendorLogin from "./components/VendorLogin.jsx";
+import VendorPayHistory from "./vendor/VendorPayHistory.jsx"
 
 // Admin
 import AdminRegister from "./components/AdminRegister.jsx";
@@ -61,6 +62,7 @@ function App() {
             <Route path="/completedOrders" element={<CompletedOrder />} />
             <Route path="/currentOrders" element={<CurrentOrder />} />
             <Route path="/vendorWallet" element={<Wallet />} />
+            <Route path="/vendorPayHistory" element={<VendorPayHistory />} />
             <Route path="/salesList" element={<SalesList />} />
             {/* <Route path="/vendorOrderStatus" element={<OrderStatus />} /> */}
           </Routes>

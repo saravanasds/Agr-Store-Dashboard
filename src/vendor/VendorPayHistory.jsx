@@ -5,22 +5,32 @@ import { format } from 'date-fns';
 
 const PaymentHistory = () => {
   const [payHistories, setPayHistories] = useState([]);
+  const [vendorEmail, setVendorEmail] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchPayHistories = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/admin/getAllPayHistories');
-        setPayHistories(response.data);
-      } catch (err) {
-        setError('Error fetching vendors');
-      }
-    };
-
-    fetchPayHistories();
+    const vendorEmail = localStorage.getItem("vendorEmail");
+    setVendorEmail(vendorEmail);
   }, []);
 
+  console.log(vendorEmail);
+  useEffect(() => {
+    if (vendorEmail) {
+      const fetchPayHistories = async () => {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/admin/getPayHistoriesByVendorEmail/${vendorEmail}`);
+          setPayHistories(response.data);
+        } catch (err) {
+          setError('Error fetching vendors');
+        }
+      };
+      fetchPayHistories();
+    }
+  }, [vendorEmail]);
+  
+
   return (
-    <div className='w-full min-h-[100vh]'>
+    <div className='w-full min-h-[100vh] bg-slate-300'>
       <div className='w-full h-16 bg-gray-800 flex justify-between items-center py-3 px-10 border-b border-cyan-400'>
         <div><span className='sm:text-2xl font-semibold uppercase text-white tracking-widest'>Payment History</span></div>
         <div className=' rounded-full flex justify-center items-center'>
