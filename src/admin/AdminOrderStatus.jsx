@@ -6,6 +6,7 @@ const AdminOrderStatus = () => {
   const [activeTab, setActiveTab] = useState('current');
   const [orders, setOrders] = useState([]);
   const [openOrders, setOpenOrders] = useState(new Set()); // Use Set for tracking open orders
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -14,6 +15,9 @@ const AdminOrderStatus = () => {
         setOrders(response.data.orders);
       } catch (error) {
         console.error('Error fetching orders:', error);
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -177,34 +181,46 @@ const AdminOrderStatus = () => {
         </div>
       </div>
 
-      <div className="w-full p-4">
-        <div className="flex justify-center space-x-4 mb-4">
-          <button
-            onClick={() => setActiveTab('current')}
-            className={`py-2 px-4 rounded ${activeTab === 'current' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}
-          >
-            Current Orders
-          </button>
-          <button
-            onClick={() => setActiveTab('completed')}
-            className={`py-2 px-4 rounded ${activeTab === 'completed' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}
-          >
-            Completed Orders
-          </button>
-          <button
-            onClick={() => setActiveTab('canceled')}
-            className={`py-2 px-4 rounded ${activeTab === 'canceled' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}
-          >
-            Canceled Orders
-          </button>
-        </div>
+      {
+        loading ?
+          (
+            <span className='w-full min-h-[80vh] text-2xl text-white tracking-widest font-semibold flex items-center justify-center py-2'>
+              Loading
+              <span className='dot-animate inline-block w-1 h-1 mx-1 bg-white rounded-full animate-bounce1 mt-6'></span>
+              <span className='dot-animate inline-block w-1 h-1 mx-1 bg-white rounded-full animate-bounce2 mt-6'></span>
+              <span className='dot-animate inline-block w-1 h-1 mx-1 bg-white rounded-full animate-bounce3 mt-6'></span>
+            </span>
+          ) :
 
-        <div className="bg-white shadow rounded-lg p-4">
-          {activeTab === 'current' && renderTable(currentOrders)}
-          {activeTab === 'completed' && renderTable(completedOrders)}
-          {activeTab === 'canceled' && renderTable(canceledOrders)}
-        </div>
-      </div>
+          (<div className="w-full p-4">
+            <div className="flex justify-center space-x-4 mb-4">
+              <button
+                onClick={() => setActiveTab('current')}
+                className={`py-2 px-4 rounded ${activeTab === 'current' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}
+              >
+                Current Orders
+              </button>
+              <button
+                onClick={() => setActiveTab('completed')}
+                className={`py-2 px-4 rounded ${activeTab === 'completed' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}
+              >
+                Completed Orders
+              </button>
+              <button
+                onClick={() => setActiveTab('canceled')}
+                className={`py-2 px-4 rounded ${activeTab === 'canceled' ? 'bg-gray-800 text-white' : 'bg-gray-200'}`}
+              >
+                Canceled Orders
+              </button>
+            </div>
+
+            <div className="bg-white shadow rounded-lg p-4">
+              {activeTab === 'current' && renderTable(currentOrders)}
+              {activeTab === 'completed' && renderTable(completedOrders)}
+              {activeTab === 'canceled' && renderTable(canceledOrders)}
+            </div>
+          </div>)
+      }
     </div>
   );
 };

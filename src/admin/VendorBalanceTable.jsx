@@ -7,21 +7,25 @@ const VendorBalanceTable = () => {
     const [open, setOpen] = useState(false);
     const [selectedVendor, setSelectedVendor] = useState(null);
     const [transactionId, setTransactionId] = useState("");
+    const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
         const fetchVendors = async () => {
-          try {
-            const response = await axios.get('http://localhost:5000/api/vendor/all');
-            setVendors(response.data);
-          } catch (err) {
-            setError('Error fetching vendors');
-          }
+            try {
+                const response = await axios.get('http://localhost:5000/api/vendor/all');
+                setVendors(response.data);
+            } catch (err) {
+                setError('Error fetching vendors');
+            }
+            finally {
+                setLoading(false);
+            }
         };
-    
+
         fetchVendors();
-      }, []);
-    
+    }, []);
+
 
     const handleOpen = (vendor) => {
         setSelectedVendor(vendor);
@@ -58,33 +62,45 @@ const VendorBalanceTable = () => {
                 </div>
             </div>
 
-            <table className="min-w-[95%] bg-[rgba(0,0,0,0.4)] mt-10 mx-auto">
-                <thead className='bg-cyan-700 text-white '>
-                    <tr>
-                        <th className="py-2 font-semibold tracking-wider">Sl.no</th>
-                        <th className="py-2 font-semibold tracking-wider">ShopName</th>
-                        <th className="py-2 font-semibold tracking-wider">Total Balance (&#x20B9;)</th>
-                        <th className="py-2 font-semibold tracking-wider">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {vendors.map((vendor, index) => (
-                        <tr key={vendor.shopName} className="border-b border-gray-600">
-                            <td className="py-2 text-center text-white">{index + 1}</td>
-                            <td className="py-2 text-center text-white">{vendor.shopName}</td>
-                            <td className="py-2 text-center text-white">&#x20B9; {vendor.vendorBalance.toFixed(2)}</td>
-                            <td className="py-2 text-center text-white">
-                                <button
-                                    onClick={() => handleOpen(vendor)}
-                                    className='bg-blue-600 px-8 py-1 text-sm font-semibold rounded-sm hover:bg-blue-800'
-                                >
-                                    Pay
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            {
+                loading ?
+                    (
+                        <span className='w-full min-h-[80vh] text-2xl text-white tracking-widest font-semibold flex items-center justify-center py-2'>
+                            Loading
+                            <span className='dot-animate inline-block w-1 h-1 mx-1 bg-white rounded-full animate-bounce1 mt-6'></span>
+                            <span className='dot-animate inline-block w-1 h-1 mx-1 bg-white rounded-full animate-bounce2 mt-6'></span>
+                            <span className='dot-animate inline-block w-1 h-1 mx-1 bg-white rounded-full animate-bounce3 mt-6'></span>
+                        </span>
+                    ) :
+
+                    (<table className="min-w-[95%] bg-[rgba(0,0,0,0.4)] mt-10 mx-auto">
+                        <thead className='bg-cyan-700 text-white '>
+                            <tr>
+                                <th className="py-2 font-semibold tracking-wider">Sl.no</th>
+                                <th className="py-2 font-semibold tracking-wider">ShopName</th>
+                                <th className="py-2 font-semibold tracking-wider">Total Balance (&#x20B9;)</th>
+                                <th className="py-2 font-semibold tracking-wider">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {vendors.map((vendor, index) => (
+                                <tr key={vendor.shopName} className="border-b border-gray-600">
+                                    <td className="py-2 text-center text-white">{index + 1}</td>
+                                    <td className="py-2 text-center text-white">{vendor.shopName}</td>
+                                    <td className="py-2 text-center text-white">&#x20B9; {vendor.vendorBalance.toFixed(2)}</td>
+                                    <td className="py-2 text-center text-white">
+                                        <button
+                                            onClick={() => handleOpen(vendor)}
+                                            className='bg-blue-600 px-8 py-1 text-sm font-semibold rounded-sm hover:bg-blue-800'
+                                        >
+                                            Pay
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>)
+            }
 
             {open && (
                 <div className='fixed inset-0 flex items-center justify-center z-50 bg-[rgba(0,0,0,0.2)] backdrop-blur-[2px]'>

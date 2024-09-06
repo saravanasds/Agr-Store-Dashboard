@@ -9,6 +9,7 @@ const Category = () => {
     const [selectedDepartment, setSelectedDepartment] = useState(''); // State for selected department
     const [categoryImage, setCategoryImage] = useState(null); // State for the category image
     const [imagePreview, setImagePreview] = useState(''); // State for image preview
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchDepartments = async () => {
@@ -18,6 +19,9 @@ const Category = () => {
                 setDepartments(response.data);
             } catch (error) {
                 console.error('Error fetching departments:', error);
+            }
+            finally {
+                setLoading(false);
             }
         };
 
@@ -82,63 +86,75 @@ const Category = () => {
                 </div>
             </div>
 
-            <form onSubmit={handleCreateCategory} className="w-full flex flex-col md:flex-row items-center justify-center min-h-[40vh] py-20 border-b-2 border-cyan-400 gap-8">
-                <div className='w-full md:w-[50%] flex flex-col justify-center items-center'>
-                    <h1 className='text-white text-3xl font-semibold tracking-wider mb-8'>Create New Category</h1>
-                    <label className="block text-white font-semibold mb-1" htmlFor="department">
-                        Choose Department
-                    </label>
-                    <select
-                        name="department"
-                        id="department"
-                        value={selectedDepartment}
-                        onChange={handleDepartmentChange}
-                        className="border border-gray-300 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-500 bg-gray-800"
-                    >
-                        <option value="" className="text-gray-500 bg-transparent">Select Department</option>
-                        {departments.map(dept => (
-                            <option key={dept._id} value={dept.department} className="text-white bg-gray-800">
-                                {dept.department}
-                            </option>
-                        ))}
-                    </select>
-                    <label htmlFor="categoryImage" className='mb-4 text-white'>Category Image:</label>
-                    <input
-                        type="file"
-                        onChange={handleImageChange}
-                        accept="image/*"
-                        className='w-[300px] mb-4 bg-white'
-                    />
-                    <input
-                        type="text"
-                        value={newCategory}
-                        onChange={handleInputChange}
-                        placeholder="New Category Name"
-                        className='w-[300px] mb-4'
-                    />
-                </div>
+            {
+                loading ?
+                    (
+                        <span className='w-full min-h-[80vh] text-2xl text-white tracking-widest font-semibold flex items-center justify-center py-2'>
+                            Loading
+                            <span className='dot-animate inline-block w-1 h-1 mx-1 bg-white rounded-full animate-bounce1 mt-6'></span>
+                            <span className='dot-animate inline-block w-1 h-1 mx-1 bg-white rounded-full animate-bounce2 mt-6'></span>
+                            <span className='dot-animate inline-block w-1 h-1 mx-1 bg-white rounded-full animate-bounce3 mt-6'></span>
+                        </span>
+                    ) :
 
-                {imagePreview && (
-                    <div className='w-full md:w-[50%] flex flex-col justify-center items-center'>
-                        <div className="bg-[rgb(244,246,248)] flex flex-col justify-center items-center rounded-xl overflow-hidden shadow-lg p-2">
-                            <div className="h-[200px] flex justify-center items-center">
-                                <img
-                                    className="w-40 h-40 object-cover rounded-full"
-                                    src={imagePreview}
-                                    alt="Category Preview"
-                                />
-                            </div>
-                            <div className="text-center py-2 text-[rgb(69,89,91)]">
-                                <h2 className="text-xl font-semibold">{newCategory}</h2>
-                            </div>
-
-                            <button type='submit' className='w-full bg-cyan-600 py-2 px-6 text-white font-semibold'>
-                                Create
-                            </button>
+                    (<form onSubmit={handleCreateCategory} className="w-full flex flex-col md:flex-row items-center justify-center min-h-[40vh] py-20 border-b-2 border-cyan-400 gap-8">
+                        <div className='w-full md:w-[50%] flex flex-col justify-center items-center'>
+                            <h1 className='text-white text-3xl font-semibold tracking-wider mb-8'>Create New Category</h1>
+                            <label className="block text-white font-semibold mb-1" htmlFor="department">
+                                Choose Department
+                            </label>
+                            <select
+                                name="department"
+                                id="department"
+                                value={selectedDepartment}
+                                onChange={handleDepartmentChange}
+                                className="border border-gray-300 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-500 bg-gray-800"
+                            >
+                                <option value="" className="text-gray-500 bg-transparent">Select Department</option>
+                                {departments.map(dept => (
+                                    <option key={dept._id} value={dept.department} className="text-white bg-gray-800">
+                                        {dept.department}
+                                    </option>
+                                ))}
+                            </select>
+                            <label htmlFor="categoryImage" className='mb-4 text-white'>Category Image:</label>
+                            <input
+                                type="file"
+                                onChange={handleImageChange}
+                                accept="image/*"
+                                className='w-[300px] mb-4 bg-white'
+                            />
+                            <input
+                                type="text"
+                                value={newCategory}
+                                onChange={handleInputChange}
+                                placeholder="New Category Name"
+                                className='w-[300px] mb-4'
+                            />
                         </div>
-                    </div>
-                )}
-            </form>
+
+                        {imagePreview && (
+                            <div className='w-full md:w-[50%] flex flex-col justify-center items-center'>
+                                <div className="bg-[rgb(244,246,248)] flex flex-col justify-center items-center rounded-xl overflow-hidden shadow-lg p-2">
+                                    <div className="h-[200px] flex justify-center items-center">
+                                        <img
+                                            className="w-40 h-40 object-cover rounded-full"
+                                            src={imagePreview}
+                                            alt="Category Preview"
+                                        />
+                                    </div>
+                                    <div className="text-center py-2 text-[rgb(69,89,91)]">
+                                        <h2 className="text-xl font-semibold">{newCategory}</h2>
+                                    </div>
+
+                                    <button type='submit' className='w-full bg-cyan-600 py-2 px-6 text-white font-semibold'>
+                                        Create
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </form>)
+            }
         </div>
     )
 }
