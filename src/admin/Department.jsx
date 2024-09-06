@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { VscAccount } from "react-icons/vsc";
 import axios from 'axios';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const Department = () => {
     const [departments, setDepartments] = useState([]);
@@ -46,6 +47,8 @@ const Department = () => {
 
     const handleCreateDepartment = async (e) => {
         e.preventDefault();
+        setLoading(true);
+
         if (newDepartment.trim() && departmentImage) {
             const formData = new FormData();
             formData.append('department', newDepartment);
@@ -58,6 +61,7 @@ const Department = () => {
                     }
                 });
                 console.log('Result:', response.data);
+                alert("Department Created Successfully");
                 window.location.reload(); // Refresh the page
                 setDepartments([...departments, response.data]);
                 setNewDepartment('');
@@ -65,6 +69,9 @@ const Department = () => {
                 setImagePreview(''); // Clear the image preview
             } catch (error) {
                 console.error('Error creating department:', error);
+            }
+            finally {
+                setLoading(false);
             }
         }
     };
@@ -123,7 +130,7 @@ const Department = () => {
                                         </div>
 
                                         <button type='submit' className='w-full bg-cyan-600 py-2 px-6 text-white font-semibold'>
-                                            Create
+                                            {loading ? <ClipLoader color="#ffffff" size={20} /> : 'Create'}
                                         </button>
                                     </div>
                                 </div>

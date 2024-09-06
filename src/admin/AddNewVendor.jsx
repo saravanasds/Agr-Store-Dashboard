@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { VscAccount } from "react-icons/vsc";
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const AddNewVendor = () => {
   const [departments, setDepartments] = useState([]);
@@ -46,7 +47,8 @@ const AddNewVendor = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setLoading(true);
+    
     const newErrors = {};
 
     if (!department) newErrors.department = 'Department is required';
@@ -94,11 +96,15 @@ const AddNewVendor = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/admin/addNewVendor', vendorData);
       console.log('Vendor registered:', response.data);
-      // toast.success('User registered successfully!');
+      // toast.success('Vendor registered successfully!');
+      alert('Vendor registered successfully!');
     } catch (error) {
       console.log(error);
     }
-   
+    finally {
+      setLoading(false);
+    }
+
   };
 
 
@@ -364,7 +370,7 @@ const AddNewVendor = () => {
                     type="submit"
                     className="bg-cyan-600 text-white px-12 py-2 rounded-md hover:bg-cyan-700 focus:outline-none w-full md:w-auto text-md xl:w-full xl:text-xl tracking-wider font-semibold mt-4 xl:mt-0"
                   >
-                    Submit
+                    {loading ? <ClipLoader color="#ffffff" size={24} /> : 'Submit'}
                   </button>
                 </div>
               </form>

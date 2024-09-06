@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { VscAccount } from "react-icons/vsc";
 import axios from 'axios';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const Category = () => {
     const [departments, setDepartments] = useState([]);
@@ -30,6 +31,8 @@ const Category = () => {
 
     const handleCreateCategory = async (e) => {
         e.preventDefault();
+        setLoading(true);
+
         if (newCategory.trim() && categoryImage && selectedDepartment) {
             const formData = new FormData();
             formData.append('category', newCategory);
@@ -51,6 +54,9 @@ const Category = () => {
                 setImagePreview(''); // Clear the image preview
             } catch (error) {
                 console.error('Error creating category:', error);
+            }
+            finally {
+                setLoading(false);
             }
         }
     };
@@ -148,7 +154,7 @@ const Category = () => {
                                     </div>
 
                                     <button type='submit' className='w-full bg-cyan-600 py-2 px-6 text-white font-semibold'>
-                                        Create
+                                        {loading ? <ClipLoader color="#ffffff" size={20} /> : 'Create'}
                                     </button>
                                 </div>
                             </div>

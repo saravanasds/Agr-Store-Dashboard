@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { VscAccount } from "react-icons/vsc";
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const VendorBalanceTable = () => {
     const [vendors, setVendors] = useState([]);
@@ -38,8 +39,15 @@ const VendorBalanceTable = () => {
     };
 
     const handleSubmit = async () => {
+        if (selectedVendor.vendorBalance <= 0) {
+            alert('The vendor balance must be greater than 0 to proceed.');
+            return;
+        }
+
+        setLoading(true);
+
         try {
-            // Example of sending payment details to backend
+            // Send payment details to the backend
             const response = await axios.post('http://localhost:5000/api/admin/payVendor', {
                 vendorEmail: selectedVendor.vendorEmail,
                 shopName: selectedVendor.shopName,
@@ -47,11 +55,16 @@ const VendorBalanceTable = () => {
                 transactionId
             });
             console.log('Payment successful:', response.data);
+            alert("Payment Status Updated Successfully");
             handleClose();
         } catch (error) {
             console.error('Error making payment:', error);
+            alert('Error processing payment. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
+
 
     return (
         <div className='w-full min-h-screen'>
@@ -104,7 +117,7 @@ const VendorBalanceTable = () => {
 
             {open && (
                 <div className='fixed inset-0 flex items-center justify-center z-50 bg-[rgba(0,0,0,0.2)] backdrop-blur-[2px]'>
-                    <div className='bg-white p-5 rounded shadow-lg w-[90%] max-w-md'>
+                    <form onSubmit={handleSubmit} className='bg-white p-5 rounded shadow-lg w-[90%] max-w-md'>
                         <h2 className='text-xl font-semibold mb-4'>Pay {selectedVendor.shopName}</h2>
                         <div className='mb-4'>
                             <label className='block text-sm font-medium mb-2'>Payment Amount (&#x20B9;)</label>
@@ -117,23 +130,30 @@ const VendorBalanceTable = () => {
                                 className='w-full p-2 border rounded'
                                 value={transactionId}
                                 onChange={(e) => setTransactionId(e.target.value)}
+                                required
                             />
                         </div>
-                        <div className='flex justify-end gap-4'>
-                            <button
-                                onClick={handleClose}
-                                className='bg-gray-300 px-4 py-2 rounded hover:bg-gray-400'
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleSubmit}
-                                className='bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800'
-                            >
-                                Submit
-                            </button>
+                        <div className='flex flex-col justify-end gap-2'>
+                            <div className='flex justify-end gap-4'>
+                                <button
+                                    onClick={handleClose}
+                                    className='bg-gray-300 px-4 py-2 rounded hover:bg-gray-400'
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type='submit'
+                                    className={`bg-blue-600 text-white px-4 py-2 rounded ${selectedVendor.vendorBalance <= 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-800'}`}
+                                    disabled={selectedVendor.vendorBalance <= 0}
+                                >
+                                    {loading ? <ClipLoader color="#ffffff" size={20} /> : 'Submit'}
+                                </button>
+                            </div>
+                            {selectedVendor.vendorBalance <= 0 && (
+                                <p className='text-red-500 text-sm mt-2'>Payment cannot be processed. The vendor's balance is 0.</p>
+                            )}
                         </div>
-                    </div>
+                    </form>
                 </div>
             )}
         </div>
