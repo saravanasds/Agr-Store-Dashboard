@@ -57,34 +57,43 @@ const CurrentOrder = () => {
         </div>
       </div>
 
-      <div className='w-full flex justify-center items-center'>
-        <table className="min-w-[95%] bg-white mt-10">
-          <thead className='border-b-2 bg-slate-400'>
-            <tr>
-              <th className="py-4">Sl.no</th>
-              <th className="py-4">Product Code</th>
-              <th className="py-4">Product</th>
-              <th className="py-4">Quantity</th>
-              <th className="py-4">Price</th>
-              <th className="py-4">Time</th>
-              <th className="py-4">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order, index) => (
-              <tr key={order.productId} className="border-b">
-                <td className="py-2 text-center">{index + 1}</td>
-                <td className="py-2 text-center">{order.productCode}</td>
-                <td className="py-2 text-center">{order.productName}</td>
-                <td className="py-2 text-center">{order.quantity}</td>
-                <td className="py-2 text-center">&#x20B9; {order.total}</td>
-                <td className="py-2 text-center">{formatDate(new Date(order.createdAt))}</td>
-                <td className="py-2 text-center">{order.orderStatus}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {
+        orders.length === 0 ?
+
+          (<div className='w-full min-h-[90vh] flex justify-center items-center'>
+            <h1 className='text-2xl text-black font-semibold tracking-wider'>No Orders Found</h1>
+          </div>)
+          :
+
+          (<div className='w-full flex justify-center items-center'>
+            <table className="min-w-[95%] bg-white mt-10">
+              <thead className='border-b-2 bg-slate-400'>
+                <tr>
+                  <th className="py-4">Sl.no</th>
+                  <th className="py-4">Product Code</th>
+                  <th className="py-4">Product</th>
+                  <th className="py-4">Quantity</th>
+                  <th className="py-4">Price</th>
+                  <th className="py-4">Time</th>
+                  <th className="py-4">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order, index) => (
+                  <tr key={order.productId} className="border-b">
+                    <td className="py-2 text-center">{index + 1}</td>
+                    <td className="py-2 text-center">{order.productCode}</td>
+                    <td className="py-2 text-center">{order.productName}</td>
+                    <td className="py-2 text-center">{order.quantity}</td>
+                    <td className="py-2 text-center">&#x20B9; {order.total}</td>
+                    <td className="py-2 text-center">{formatDate(new Date(order.createdAt))}</td>
+                    <td className="py-2 text-center">{order.orderStatus}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>)
+      }
     </div>
   );
 };

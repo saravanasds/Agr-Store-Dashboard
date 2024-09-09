@@ -40,21 +40,24 @@ const AdminWallet = () => {
         const response = await axios.get('http://localhost:5000/api/order/getAllOrders');
         const orders = response.data.orders;
         console.log(orders);
-
-        // Calculate the total sale amount
-        const totalUsedUserShare = orders.reduce((acc, order) => acc + order.discount, 0);
+  
+        // Filter orders with status 'Completed'
+        const completedOrders = orders.filter(order => order.orderStatus === 'Completed');
+  
+        // Calculate the total sale amount for completed orders
+        const totalUsedUserShare = completedOrders.reduce((acc, order) => acc + order.discount, 0);
         setUsedUserShare(totalUsedUserShare);
-
+  
       } catch (error) {
         console.error('Error fetching orders:', error);
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
-
+  
     fetchOrders();
   }, []);
+  
 
   return (
     <>

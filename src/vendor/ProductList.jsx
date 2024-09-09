@@ -10,9 +10,11 @@ const ProductList = () => {
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const [productNameFilter, setProductNameFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [productCodeFilter, setProductCodeFilter] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
@@ -27,6 +29,9 @@ const ProductList = () => {
         setVendorProducts(response.data.data || []);
       } catch (err) {
         setError('Error fetching products');
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -121,7 +126,8 @@ const ProductList = () => {
   // Filter products based on the filters
   const filteredProducts = vendorProducts.filter(product =>
     (product.productName?.toLowerCase().includes(productNameFilter.toLowerCase()) || !productNameFilter) &&
-    (product.category?.toLowerCase().includes(categoryFilter.toLowerCase()) || !categoryFilter)
+    (product.category?.toLowerCase().includes(categoryFilter.toLowerCase()) || !categoryFilter) &&
+    (product.productCode?.toLowerCase().includes(productCodeFilter.toLowerCase()) || !productCodeFilter)
   );
 
   // Calculate the products to display for the current page
@@ -139,99 +145,118 @@ const ProductList = () => {
         </div>
       </div>
 
-      <div className='w-full flex flex-col justify-center items-center p-4 md:p-10'>
+      {
+        loading ?
+          (
+            <span className='w-full min-h-[80vh] text-2xl text-black tracking-widest font-semibold flex items-center justify-center py-2'>
+              Loading
+              <span className='dot-animate inline-block w-1 h-1 mx-1 bg-black rounded-full animate-bounce1 mt-6'></span>
+              <span className='dot-animate inline-block w-1 h-1 mx-1 bg-black rounded-full animate-bounce2 mt-6'></span>
+              <span className='dot-animate inline-block w-1 h-1 mx-1 bg-black rounded-full animate-bounce3 mt-6'></span>
+            </span>
+          ) :
 
-        <div className='w-full flex flex-col lg:flex-row justify-center lg:justify-between items-center mb-6 gap-6'>
-          <div>
-            <span className='text-xl font-semibold tracking-wider'>Total products: {filteredProducts.length}</span>
-          </div>
-          {/* Filter Inputs */}
-          <div className='flex flex-col md:flex-row lg:justify-end justify-center items-center gap-4'>
-            <input
-              type='text'
-              placeholder='Filter by product name'
-              value={productNameFilter}
-              onChange={(e) => setProductNameFilter(e.target.value)}
-              className='p-2 border border-gray-300 rounded'
-            />
-            <input
-              type='text'
-              placeholder='Filter by category'
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className='p-2 border border-gray-300 rounded'
-            />
-          </div>
-        </div>
+          (<div className='w-full flex flex-col justify-center items-center p-4 md:p-10'>
 
-        <div className="overflow-auto w-full border-[1px] border-black">
-          <table className="min-w-full">
-            <thead className="bg-cyan-700">
-              <tr>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Sl.no</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Image</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Product Code</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Description</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Category</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Unit</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Price</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Action</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {currentProducts.map((product, index) => (
-                <tr key={index} className='border-b-2'>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{startIndex + index + 1}</td>
-                  <td className="px-6 py-4 flex justify-center items-center">
-                    <img src={product.productImage || ''} alt={product.productName || 'Product Image'} className='h-16 object-cover' />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productCode || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productName || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.description || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.category || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.unit || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">&#x20B9; {product.price || 'N/A'}</td>
-                  <td className="px-6 py-4 text-center whitespace-nowrap">
-                    <button
-                      className='p-1 text-xs sm:text-sm rounded-md shadow-md shadow-gray-600 text-blue-600 mr-2'
-                      onClick={() => openEditPopup(product)}
-                    >
-                      <FaEdit className='w-6 h-6' />
-                    </button>
-                    <button
-                      className='p-1 text-xs sm:text-sm rounded-md shadow-md shadow-gray-600 text-red-600'
-                      onClick={() => openDeletePopup(product)}
-                    >
-                      <RiDeleteBin5Line className='w-6 h-6' />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            <div className='w-full flex flex-col lg:flex-row justify-center lg:justify-between items-center mb-6 gap-6'>
+              <div>
+                <span className='text-xl font-semibold tracking-wider'>Total products: {filteredProducts.length}</span>
+              </div>
+              {/* Filter Inputs */}
+              <div className='flex flex-col md:flex-row lg:justify-end justify-center items-center gap-4'>
+                <input
+                  type='text'
+                  placeholder='Filter by product code'
+                  value={productCodeFilter}
+                  onChange={(e) => setProductCodeFilter(e.target.value)}
+                  className='p-2 border border-gray-300 rounded'
+                />
+                <input
+                  type='text'
+                  placeholder='Filter by product name'
+                  value={productNameFilter}
+                  onChange={(e) => setProductNameFilter(e.target.value)}
+                  className='p-2 border border-gray-300 rounded'
+                />
+                <input
+                  type='text'
+                  placeholder='Filter by category'
+                  value={categoryFilter}
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className='p-2 border border-gray-300 rounded'
+                />
+              </div>
+            </div>
 
-        {/* Pagination */}
-        <div className='w-full flex justify-center items-center py-4'>
-          <button
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-            className='px-4 py-2 mx-1 bg-gray-500 text-white rounded disabled:opacity-50'
-          >
-            Previous
-          </button>
-          <span className='mx-2'>{currentPage}</span>
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === Math.ceil(filteredProducts.length / productsPerPage)}
-            className='px-4 py-2 mx-1 bg-gray-500 text-white rounded disabled:opacity-50'
-          >
-            Next
-          </button>
-        </div>
+            <div className="overflow-auto w-full border-[1px] border-black">
+              <table className="min-w-full">
+                <thead className="bg-cyan-700">
+                  <tr>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Sl.no</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Image</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Product Code</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Description</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Category</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Unit</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Price</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentProducts.map((product, index) => (
+                    <tr key={index} className='border-b-2'>
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{startIndex + index + 1}</td>
+                      <td className="px-6 py-4 flex justify-center items-center">
+                        <img src={product.productImage || ''} alt={product.productName || 'Product Image'} className='h-16 object-cover' />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productCode || 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productName || 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.description || 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.category || 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.unit || 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">&#x20B9; {product.price || 'N/A'}</td>
+                      <td className="px-6 py-4 text-center whitespace-nowrap">
+                        <button
+                          className='p-1 text-xs sm:text-sm rounded-md shadow-md shadow-gray-600 text-blue-600 mr-2'
+                          onClick={() => openEditPopup(product)}
+                        >
+                          <FaEdit className='w-6 h-6' />
+                        </button>
+                        <button
+                          className='p-1 text-xs sm:text-sm rounded-md shadow-md shadow-gray-600 text-red-600'
+                          onClick={() => openDeletePopup(product)}
+                        >
+                          <RiDeleteBin5Line className='w-6 h-6' />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-      </div>
+            {/* Pagination */}
+            <div className='w-full flex justify-center items-center py-4'>
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className='px-4 py-2 mx-1 bg-gray-500 text-white rounded disabled:opacity-50'
+              >
+                Previous
+              </button>
+              <span className='mx-2'>{currentPage}</span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === Math.ceil(filteredProducts.length / productsPerPage)}
+                className='px-4 py-2 mx-1 bg-gray-500 text-white rounded disabled:opacity-50'
+              >
+                Next
+              </button>
+            </div>
+
+          </div>)
+      }
 
       {/* Edit Popup */}
       {isEditPopupOpen && selectedProduct && (

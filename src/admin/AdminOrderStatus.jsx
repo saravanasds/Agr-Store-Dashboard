@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { VscAccount } from "react-icons/vsc";
 import axios from 'axios';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const AdminOrderStatus = () => {
   const [activeTab, setActiveTab] = useState('current');
@@ -37,6 +38,7 @@ const AdminOrderStatus = () => {
   };
 
   const updateOrderStatus = async (orderId, status, index) => {
+    setLoading(true);
     try {
       await axios.put(`http://localhost:5000/api/order/updateOrderStatus/${orderId}`, { orderStatus: status });
       const updatedOrders = orders.map((order, i) =>
@@ -44,8 +46,12 @@ const AdminOrderStatus = () => {
       );
       setOrders(updatedOrders);
       window.alert(`Order status updated to ${status}`);
+      window.location.reload();
     } catch (error) {
       console.error(`Error updating order status to ${status}:`, error);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -104,7 +110,7 @@ const AdminOrderStatus = () => {
                         }}
                         className='bg-green-500 text-xs text-white font-semibold py-1 px-3 rounded-md mr-2'
                       >
-                        Complete
+                        {loading ? <ClipLoader color="#ffffff" size={20} /> : 'Complete'}
                       </button>
                       <button
                         onClick={(e) => {
@@ -113,7 +119,7 @@ const AdminOrderStatus = () => {
                         }}
                         className='bg-gray-500 text-xs text-white font-semibold py-1 px-3 rounded-md'
                       >
-                        Cancel
+                        {loading ? <ClipLoader color="#ffffff" size={20} /> : 'Cancel'}
                       </button>
                     </>
                   ) : <div className='text-sm text-gray-400 font-semibold'>Updated</div>}
