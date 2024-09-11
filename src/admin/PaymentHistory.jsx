@@ -82,7 +82,7 @@ const PaymentHistory = () => {
           </div>
 
           {/* Pagination Controls */}
-          <div className="flex justify-center items-center my-6">
+          <div className="flex justify-center items-center flex-wrap my-6 gap-2">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}

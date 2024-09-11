@@ -8,6 +8,8 @@ const AdminOrderStatus = () => {
   const [orders, setOrders] = useState([]);
   const [openOrders, setOpenOrders] = useState(new Set()); // Use Set for tracking open orders
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 20;
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -66,6 +68,16 @@ const AdminOrderStatus = () => {
     };
     const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
     return formattedDate;
+  };
+
+  // Pagination calculations
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = orders.slice(indexOfFirstRecord, indexOfLastRecord);
+  const totalPages = Math.ceil(orders.length / recordsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   const renderTable = (filteredOrders) => (
@@ -176,9 +188,9 @@ const AdminOrderStatus = () => {
 
 
 
-  const currentOrders = orders.filter(order => order.orderStatus === 'Processing');
-  const completedOrders = orders.filter(order => order.orderStatus === 'Completed');
-  const canceledOrders = orders.filter(order => order.orderStatus === 'Canceled');
+  const currentOrders = currentRecords.filter(order => order.orderStatus === 'Processing');
+  const completedOrders = currentRecords.filter(order => order.orderStatus === 'Completed');
+  const canceledOrders = currentRecords.filter(order => order.orderStatus === 'Canceled');
 
   return (
     <div className='w-full min-h-screen'>
@@ -227,7 +239,37 @@ const AdminOrderStatus = () => {
               {activeTab === 'completed' && renderTable(completedOrders)}
               {activeTab === 'canceled' && renderTable(canceledOrders)}
             </div>
+
+            {/* Pagination Controls */}
+            <div className="flex justify-center items-center my-6 flex-wrap gap-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`mx-2 px-3 py-1 text-white text-xs ${currentPage === 1 ? 'bg-gray-400' : 'bg-cyan-700 hover:bg-cyan-800'} rounded`}
+              >
+                Previous
+              </button>
+
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`mx-1 px-3 py-1  text-xs ${currentPage === index + 1 ? 'bg-cyan-800 text-white' : 'bg-cyan-700 text-white hover:bg-cyan-800'} rounded`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`mx-2 px-3 py-1 text-white text-xs ${currentPage === totalPages ? 'bg-gray-400' : 'bg-cyan-700 hover:bg-cyan-800'} rounded`}
+              >
+                Next
+              </button>
+            </div>
           </div>)
+
       }
     </div>
   );

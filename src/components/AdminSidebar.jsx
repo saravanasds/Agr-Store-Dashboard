@@ -131,7 +131,8 @@ const AdminSidebar = ({ children, role }) => {
             <div
                 style={{
                     width: isOpen ? (isMobile ? "100%" : "250px") : "40px",
-                    minWidth: isOpen ? (isMobile ? "100%" : "250px") : "40px"
+                    minWidth: isOpen ? (isMobile ? "100%" : "250px") : "40px",
+                    backgroundColor: isOpen ? (isMobile? "black" : "rgba(0,0,0,0.4)") : "rgba(0,0,0,0.4)"
                 }}
                 className="border-r border-cyan-400 bg-[rgba(0,0,0,0.4)] min-h-screen text-white transition-all duration-500 fixed z-10 shadow-md shadow-gray-600"
             >
