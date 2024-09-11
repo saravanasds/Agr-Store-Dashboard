@@ -67,8 +67,8 @@ const MemberDetails = () => {
           <span className='dot-animate inline-block w-1 h-1 mx-1 bg-white rounded-full animate-bounce3 mt-6'></span>
         </span>
       ) : (
-        <div className="overflow-x-auto rounded p-10">
-          <table className="min-w-full bg-[rgba(0,0,0,0.4)] border border-gray-400 rounded">
+        <div className="overflow-x-scroll rounded py-10 px-4 sm:px-10">
+          <table className="w-full bg-[rgba(0,0,0,0.4)] border border-gray-400 rounded whitespace-nowrap text-sm sm:text-[16px]">
             <thead className='bg-cyan-700 text-white'>
               <tr>
                 <th className="px-4 py-2 border-b border-gray-400 font-normal">Sl.no</th>

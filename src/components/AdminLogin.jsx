@@ -52,23 +52,26 @@ const AdminLogin = ({ setRole }) => {
     };
 
     return (
-        <div className='w-full h-[100vh] bg-gray-950 flex flex-col justify-center items-center gap-3 p-10'>
+        <div className='w-full h-[100vh] bg-gray-950 flex flex-col justify-center items-center gap-3 p-4 sm:p-10'>
             <form onSubmit={handleSubmit} className='min-h-[50vh] flex flex-col justify-center items-center w-full md:w-[40%] gap-3 p-5 rounded-xl' style={{ boxShadow: "0px 0px 12px cyan" }}>
-                <h2 className='text-3xl font-bold tracking-wider mb-4 text-gray-300 uppercase'>Admin Login</h2>
+                <h2 className='text-2xl sm:text-3xl font-bold tracking-wider mb-4 text-gray-300 uppercase'>Admin Login</h2>
                 <input type="email" name="email" placeholder='Email' className='w-full md:w-[80%] p-3 rounded border-none outline-none' required onChange={handleChange} value={formData.email} />
                 <input type="password" name="password" placeholder='Password' className='w-full md:w-[80%] p-3 rounded border-none outline-none' required onChange={handleChange} value={formData.password} />
-                <button type='submit' className='w-full md:w-[80%] bg-cyan-700 py-3 px-10 rounded font-semibold text-white flex justify-center items-center hover:bg-cyan-800 border uppercase tracking-widest'>
+                <button type='submit' className='w-full md:w-[80%] bg-cyan-700 py-2 sm:py-3 px-10 rounded font-semibold text-white flex justify-center items-center hover:bg-cyan-800 border uppercase tracking-widest'>
                     {loading ? <ClipLoader color="#ffffff" size={24} /> : 'Login'}
                 </button>
+                {message && <p className='text-white'>{message}</p>}
             </form>
-            {message && <p className='text-white'>{message}</p>}
-            <div className="text-center text-white mt-3">
-                <p>
-                    Go to Vendor Login
-                    <Link to="/" className="font-bold hover:underline ml-3 text-cyan-400 underline">
-                        Click Here
-                    </Link>
-                </p>
+
+            <div className="text-center text-white mt-3 flex gap-6">
+
+                <Link to="/" className="font-bold text-cyan-400 tracking-wider bg-gray-900 px-8 py-1 rounded-lg shadow shadow-cyan-600">
+                    Vendor
+                </Link>
+                <Link to="/adminLogin" className="font-bold text-cyan-400 tracking-wider bg-gray-900 px-8 py-1 rounded-lg shadow shadow-cyan-600">
+                    Admin
+                </Link>
+
             </div>
         </div>
     )

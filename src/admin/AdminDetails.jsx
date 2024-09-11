@@ -49,15 +49,15 @@ const AdminDetails = () => {
                                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-white'>
                                     {admins.map((admin, index) => (
                                         <div key={index} className='bg-[rgba(0,0,0,0.4)] p-6 rounded-lg  shadow-lg border border-cyan-400 text-white' >
-                                            <h2 className='text-xl font-semibold text-white mb-2 tracking-wider capitalize'>{admin.name || "N/A"} <span className='text-gray-200 font-normal text-sm'>({admin.role})</span></h2>
-                                            <p className='text-gray-300 tracking-wider'>{admin.email}</p>
+                                            <h2 className='text-[16px] sm:text-xl font-semibold text-white mb-2 tracking-wider capitalize'>{admin.name || "N/A"} <span className='text-gray-200 font-normal text-sm'>({admin.role})</span></h2>
+                                            <p className='text-sm text-gray-300 tracking-wider'>{admin.email}</p>
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
                             <div className='w-full text-center p-8'>
-                                <a href="/adminRegister" className='bg-cyan-600 text-white px-10 py-2 rounded-md hover:bg-cyan-700 font-semibold tracking-wider'>
+                                <a href="/adminRegister" className='bg-cyan-600 text-white px-10 py-2 rounded-md hover:bg-cyan-700 font-semibold tracking-wider text-sm sm:text-lg'>
                                     Add New Staff
                                 </a>
                             </div>

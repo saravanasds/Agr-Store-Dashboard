@@ -73,25 +73,25 @@ const AdminRegister = () => {
                 </div>
             </div>
             <div className='w-full min-h-[90vh] flex flex-col justify-center items-center gap-3'>
-                <form className='flex flex-col justify-center items-center w-[50%] border border-cyan-400 gap-3 py-10 bg-[rgba(0,0,0,0.3)]' onSubmit={handleSubmit}>
+                <form className='flex flex-col justify-center items-center w-[90%] md:w-[50%] border border-cyan-400 gap-3 py-10 bg-[rgba(0,0,0,0.3)] rounded' onSubmit={handleSubmit}>
                     {message && <p className='text-red-600 mt-2 bg-gray-300 p-1 px-8 tracking-wider'>{message}</p>}
-                    <h1 className='text-3xl text-white font-bold tracking-wider mb-2'>Staff Register</h1>
-                    <input type="text" name="name" placeholder='Name' className='w-[60%] p-3 rounded-md' onChange={handleChange} value={formData.name} required />
-                    <input type="email" name="email" placeholder='Email' className='w-[60%] p-3 rounded-md' onChange={handleChange} value={formData.email} required />
-                    <input type="password" name="password" placeholder='Password' className='w-[60%] p-3 rounded-md' onChange={handleChange} value={formData.password} required />
-                    <input type="password" name="confirmPassword" placeholder='Confirm Password' className='w-[60%] p-3 rounded-md' onChange={handleChange} value={formData.confirmPassword} required />
+                    <h1 className='text-2xl sm:text-3xl text-white font-bold tracking-wider mb-2'>Staff Register</h1>
+                    <input type="text" name="name" placeholder='Name' className='w-[80%] md:w-[60%] p-1 sm:p-3 px-2 rounded text-sm sm:text-[16px]' onChange={handleChange} value={formData.name} required />
+                    <input type="email" name="email" placeholder='Email' className='w-[80%] md:w-[60%] p-1 sm:p-3 px-2 rounded text-sm sm:text-[16px]' onChange={handleChange} value={formData.email} required />
+                    <input type="password" name="password" placeholder='Password' className='w-[80%] md:w-[60%] p-1 sm:p-3 px-2 rounded text-sm sm:text-[16px]' onChange={handleChange} value={formData.password} required />
+                    <input type="password" name="confirmPassword" placeholder='Confirm Password' className='w-[80%] md:w-[60%] p-1 sm:p-3 px-2 rounded text-sm sm:text-[16px]' onChange={handleChange} value={formData.confirmPassword} required />
 
                     {/* Role Select Dropdown */}
-                    <select name="role" className='w-[60%] p-3 rounded-md' onChange={handleChange} value={formData.role} required>
+                    <select name="role" className='w-[80%] md:w-[60%] p-1 sm:p-3 px-2 rounded text-sm sm:text-[16px]' onChange={handleChange} value={formData.role} required>
                         <option value="">Select Role</option> {/* Ensure empty value for default */}
                         <option value="admin">Admin</option>
                         <option value="delivery boy">Delivery Boy</option>
                     </select>
 
-                    <button type='submit' className='w-[60%] bg-cyan-600 p-2 px-8 text-md font-semibold text-white tracking-wider rounded-md hover:bg-cyan-700 flex justify-center items-center'>
+                    <button type='submit' className='w-[80%] md:w-[60%] bg-cyan-600 p-1 sm:p-2 sm:px-8 text-md font-semibold text-white tracking-wider rounded-md hover:bg-cyan-700 flex justify-center items-center text-sm sm:text-[16px]'>
                         {loading ? <ClipLoader color={"#fff"} size={20} /> : "Register"}
                     </button>
-                    <a href='/adminDetails' className='w-[60%] bg-gray-400 p-1 px-8 text-md text-center font-semibold text-white tracking-wider rounded-md hover:bg-gray-600'>Go back</a>
+                    <a href='/adminDetails' className='w-[80%] md:w-[60%] bg-gray-400 p-1 sm:p-2 sm:px-8 text-md text-center font-semibold text-white tracking-wider rounded-md hover:bg-gray-600 text-sm sm:text-[16px]'>Go back</a>
                 </form>
             </div>
         </div>

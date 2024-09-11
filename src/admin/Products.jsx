@@ -81,47 +81,47 @@ const Products = () => {
                         <div className='w-full flex flex-col lg:flex-row justify-center items-center mb-6 gap-6'>
 
                             {/* Filter Inputs */}
-                            <div className='flex flex-col md:flex-row lg:justify-end justify-center items-center gap-4'>
+                            <div className='w-full flex flex-col md:flex-row lg:justify-end justify-center items-center gap-2 sm:gap-4'>
                                 <input
                                     type='text'
                                     placeholder='Filter by product code'
                                     value={productCodeFilter}
                                     onChange={(e) => setProductCodeFilter(e.target.value)}
-                                    className='p-2 border border-gray-300 rounded'
+                                    className='p-1 sm:p-2 px-2 border border-gray-300 rounded text-sm sm:text-[16px] w-full'
                                 />
                                 <input
                                     type='text'
                                     placeholder='Filter by product name'
                                     value={productNameFilter}
                                     onChange={(e) => setProductNameFilter(e.target.value)}
-                                    className='p-2 border border-gray-300 rounded'
+                                    className='p-1 sm:p-2 px-2 border border-gray-300 rounded text-sm sm:text-[16px] w-full'
                                 />
                                 <input
                                     type='text'
                                     placeholder='Filter by department'
                                     value={departmentFilter}
                                     onChange={(e) => setDepartmentFilter(e.target.value)}
-                                    className='p-2 border border-gray-300 rounded'
+                                    className='p-1 sm:p-2 px-2 border border-gray-300 rounded text-sm sm:text-[16px] w-full'
                                 />
                                 <input
                                     type='text'
                                     placeholder='Filter by category'
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className='p-2 border border-gray-300 rounded'
+                                    className='p-1 sm:p-2 px-2 border border-gray-300 rounded text-sm sm:text-[16px] w-full'
                                 />
                                 <input
                                     type='text'
                                     placeholder='Filter by shop name'
                                     value={shopNameFilter}
                                     onChange={(e) => setShopNameFilter(e.target.value)}
-                                    className='p-2 border border-gray-300 rounded'
+                                    className='p-1 sm:p-2 px-2 border border-gray-300 rounded text-sm sm:text-[16px] w-full'
                                 />
                             </div>
                         </div>
 
                         <div className="overflow-auto w-full border-[1px] border-black">
-                            <table className="min-w-full">
+                            <table className="min-w-full whitespace-nowrap">
                                 <thead className="bg-cyan-700">
                                     <tr>
                                         <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Sl.no</th>
@@ -140,7 +140,7 @@ const Products = () => {
                                         <tr key={index} className='border-b-2'>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{startIndex + index + 1}</td>
                                             <td className="px-6 py-4 flex justify-center items-center">
-                                                <img src={product.productImage || ''} alt={product.productName || 'Product Image'} className='h-16 object-cover' />
+                                                <img src={product.productImage || ''} alt={product.productName || 'Product Image'} className='h-8 sm:h-16 object-cover' />
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productCode || 'N/A'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.shopName || 'N/A'}</td>

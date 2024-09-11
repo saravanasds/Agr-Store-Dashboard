@@ -86,33 +86,37 @@ const VendorBalanceTable = () => {
                         </span>
                     ) :
 
-                    (<table className="min-w-[95%] bg-[rgba(0,0,0,0.4)] mt-10 mx-auto">
-                        <thead className='bg-cyan-700 text-white '>
-                            <tr>
-                                <th className="py-2 font-semibold tracking-wider">Sl.no</th>
-                                <th className="py-2 font-semibold tracking-wider">ShopName</th>
-                                <th className="py-2 font-semibold tracking-wider">Total Balance (&#x20B9;)</th>
-                                <th className="py-2 font-semibold tracking-wider">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {vendors.map((vendor, index) => (
-                                <tr key={vendor.shopName} className="border-b border-gray-600">
-                                    <td className="py-2 text-center text-white">{index + 1}</td>
-                                    <td className="py-2 text-center text-white">{vendor.shopName}</td>
-                                    <td className="py-2 text-center text-white">&#x20B9; {vendor.vendorBalance.toFixed(2)}</td>
-                                    <td className="py-2 text-center text-white">
-                                        <button
-                                            onClick={() => handleOpen(vendor)}
-                                            className='bg-blue-600 px-8 py-1 text-sm font-semibold rounded-sm hover:bg-blue-800'
-                                        >
-                                            Pay
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>)
+                    (
+                        <div className='overflow-x-auto px-4'>
+                            <table className="min-w-[95%] bg-[rgba(0,0,0,0.4)] mt-10 mx-auto whitespace-nowrap text-sm sm:text-[16px] ">
+                                <thead className='bg-cyan-700 text-white'>
+                                    <tr>
+                                        <th className="p-2 font-semibold tracking-wider">Sl.no</th>
+                                        <th className="p-2 font-semibold tracking-wider">ShopName</th>
+                                        <th className="p-2 font-semibold tracking-wider">Total Balance (&#x20B9;)</th>
+                                        <th className="p-2 font-semibold tracking-wider">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {vendors.map((vendor, index) => (
+                                        <tr key={vendor.shopName} className="border-b border-gray-600">
+                                            <td className="p-2 text-center text-white">{index + 1}</td>
+                                            <td className="p-2 text-center text-white">{vendor.shopName}</td>
+                                            <td className="p-2 text-center text-white">&#x20B9; {vendor.vendorBalance.toFixed(2)}</td>
+                                            <td className="p-2 text-center text-white">
+                                                <button
+                                                    onClick={() => handleOpen(vendor)}
+                                                    className='bg-blue-600 px-8 py-1 text-xs sm:text-sm font-semibold rounded-sm hover:bg-blue-800'
+                                                >
+                                                    Pay
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )
             }
 
             {open && (

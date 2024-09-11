@@ -147,7 +147,7 @@ const AdminSidebar = ({ children, role }) => {
                             <NavLink
                                 to={item.path}
                                 key={index}
-                                className="link flex items-center py-[2px] px-[18px] gap-[15px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-4 "
+                                className="link flex items-center py-[2px] px-[18px] gap-[10px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-4 "
                                 activeClassName="active"
                                 style={{ justifyContent: isOpen ? "start" : "center" }}
                                 onClick={handleMenuClick}

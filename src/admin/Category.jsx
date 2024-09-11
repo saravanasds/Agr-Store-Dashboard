@@ -105,7 +105,7 @@ const Category = () => {
 
                     (<form onSubmit={handleCreateCategory} className="w-full flex flex-col md:flex-row items-center justify-center min-h-[40vh] py-20 border-b-2 border-cyan-400 gap-8">
                         <div className='w-full md:w-[50%] flex flex-col justify-center items-center'>
-                            <h1 className='text-white text-3xl font-semibold tracking-wider mb-8'>Create New Category</h1>
+                            <h1 className='text-white text-xl sm:text-3xl text-center font-semibold tracking-wider mb-8'>Create New Category</h1>
                             <label className="block text-white font-semibold mb-1" htmlFor="department">
                                 Choose Department
                             </label>
@@ -114,7 +114,7 @@ const Category = () => {
                                 id="department"
                                 value={selectedDepartment}
                                 onChange={handleDepartmentChange}
-                                className="border border-gray-300 rounded-md py-2 px-3 text-white focus:outline-none focus:border-cyan-500 bg-gray-800"
+                                className="border border-gray-300 rounded-md py-2 px-3 mb-4 text-white focus:outline-none focus:border-cyan-500 bg-gray-800"
                             >
                                 <option value="" className="text-gray-500 bg-transparent">Select Department</option>
                                 {departments.map(dept => (
@@ -123,19 +123,19 @@ const Category = () => {
                                     </option>
                                 ))}
                             </select>
-                            <label htmlFor="categoryImage" className='mb-4 text-white'>Category Image:</label>
+                            <label htmlFor="categoryImage" className='mb-2 text-white'>Category Image:</label>
                             <input
                                 type="file"
                                 onChange={handleImageChange}
                                 accept="image/*"
-                                className='w-[300px] mb-4 bg-white'
+                                className='w-[250px] xs:w-[300px] mb-4 bg-white text-sm sm:text-[16px]'
                             />
                             <input
                                 type="text"
                                 value={newCategory}
                                 onChange={handleInputChange}
                                 placeholder="New Category Name"
-                                className='w-[300px] mb-4'
+                                className='w-[250px] xs:w-[300px] mb-4 text-sm sm:text-[16px]'
                             />
                         </div>
 
@@ -150,10 +150,10 @@ const Category = () => {
                                         />
                                     </div>
                                     <div className="text-center py-2 text-[rgb(69,89,91)]">
-                                        <h2 className="text-xl font-semibold">{newCategory}</h2>
+                                        <h2 className="text-sm sm:text-[16px] font-semibold">{newCategory}</h2>
                                     </div>
 
-                                    <button type='submit' className='w-full bg-cyan-600 py-2 px-6 text-white font-semibold'>
+                                    <button type='submit' className='w-full bg-cyan-600 py-2 px-6 text-white font-semibold text-sm sm:text-[16px]'>
                                         {loading ? <ClipLoader color="#ffffff" size={20} /> : 'Create'}
                                     </button>
                                 </div>

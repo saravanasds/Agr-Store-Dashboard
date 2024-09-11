@@ -129,7 +129,7 @@ const AddNewVendor = () => {
           ) :
           (
             <main className="w-full flex justify-center items-center py-8">
-              <form onSubmit={handleSubmit} className="w-full max-w-5xl bg-[rgba(0,0,0,0.4)] shadow-sm rounded p-6 flex flex-col sm:p-8 sm:grid md:grid-cols-2 xl:grid-cols-3 gap-3 shadow-black border border-cyan-400">
+              <form onSubmit={handleSubmit} className="w-full max-w-5xl bg-[rgba(0,0,0,0.4)] shadow-sm rounded p-6 flex flex-col sm:p-8 sm:grid md:grid-cols-2 xl:grid-cols-3 gap-3 shadow-black border border-cyan-400 text-sm sm:text-[16px]">
                 <div className="">
                   <label className="block text-white font-semibold mb-1" htmlFor="department">
                     Choose Department

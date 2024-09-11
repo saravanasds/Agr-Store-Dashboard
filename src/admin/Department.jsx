@@ -99,37 +99,37 @@ const Department = () => {
                     (<div className='w-full flex flex-col justify-center items-center pt-10'>
                         <form onSubmit={handleCreateDepartment} className="w-full flex flex-col md:flex-row items-center justify-center min-h-[40vh] py-20 border-b-2 border-cyan-400 gap-8">
                             <div className='w-full md:w-[50%] flex flex-col justify-center items-center '>
-                                <h1 className='text-white text-3xl font-semibold tracking-wider mb-8'>Create New Department</h1>
+                                <h1 className='text-white text-xl sm:text-3xl text-center font-semibold tracking-wider mb-8'>Create New Department</h1>
                                 <label htmlFor="" className='mb-4 text-white'>Department Image:</label>
                                 <input
                                     type="file"
                                     onChange={handleImageChange}
                                     accept="image/*"
-                                    className='w-[300px] mb-4 bg-white'
+                                    className='w-[250px] xs:w-[300px] mb-4 bg-white text-sm sm:text-[16px]'
                                 />
                                 <input
                                     type="text"
                                     value={newDepartment}
                                     onChange={handleInputChange}
                                     placeholder="New Department Name"
-                                    className='w-[300px] mb-4'
+                                    className='w-[250px] xs:w-[300px] mb-4 text-sm sm:text-[16px]'
                                 />
                             </div>
 
                             {imagePreview && (
                                 <div className='w-full md:w-[50%] flex flex-col justify-center items-center'>
                                     <div className=" bg-[rgb(244,246,248)] flex flex-col justify-center items-center rounded-xl overflow-hidden shadow-lg p-2">
-                                        <div className="h-[200px] flex justify-center items-center">
+                                        <div className="h-[150px] sm:h-[200px] flex justify-center items-center">
                                             <img
-                                                className="w-[250px] h-full object-cover rounded-full"
+                                                className="w-[180px] sm:w-[250px] h-full object-cover rounded-full"
                                                 src={imagePreview}
                                             />
                                         </div>
                                         <div className=" text-center py-5 text-[rgb(69,89,91)]">
-                                            <h2 className="text-xl font-semibold">{newDepartment}</h2>
+                                            <h2 className="text-sm sm:text-xl font-semibold">{newDepartment}</h2>
                                         </div>
 
-                                        <button type='submit' className='w-full bg-cyan-600 py-2 px-6 text-white font-semibold'>
+                                        <button type='submit' className='w-full bg-cyan-600 py-2 px-6 text-white font-semibold text-sm sm:text-lg'>
                                             {loading ? <ClipLoader color="#ffffff" size={20} /> : 'Create'}
                                         </button>
                                     </div>
@@ -139,19 +139,19 @@ const Department = () => {
                         </form>
 
                         <div className='w-full flex flex-col justify-center items-center mt-10'>
-                            <h1 className='w-full text-center text-4xl py-6 text-white font-semibold tracking-wider '>Our Departments</h1>
+                            <h1 className='w-full text-center text-xl sm:text-3xl py-6 text-white font-semibold tracking-wider '>Our Departments</h1>
                             <div className='w-[90%] flex flex-wrap justify-center items-center gap-10 py-6'>
                                 {departments.map((dept) => (
                                     <div key={dept._id} className="bg-[rgb(244,246,248)] rounded-xl overflow-hidden shadow-lg hover:scale-[1.1] transform transition-all duration-300 p-2">
-                                        <div className="w-full h-[200px] flex justify-center items-center">
+                                        <div className="w-full h-[150px] sm:h-[200px] flex justify-center items-center">
                                             <img
-                                                className="w-[250px] h-full object-cover rounded-full"
+                                                className="w-[180px] sm:w-[250px] h-full object-cover rounded-full"
                                                 src={dept.departmentImage}
                                                 alt={`Slide ${dept.department}`}
                                             />
                                         </div>
                                         <div className="w-full text-center py-5 text-[rgb(69,89,91)]">
-                                            <h2 className="text-xl font-semibold">{dept.department}</h2>
+                                            <h2 className="text-sm sm:text-xl font-semibold">{dept.department}</h2>
                                         </div>
                                     </div>
                                 ))}

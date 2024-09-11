@@ -81,8 +81,8 @@ const AdminWallet = () => {
             ) :
 
             (<div className='w-full flex mx-auto justify-center items-center'>
-              <div className="w-[95%] flex justify-around items-center mt-16 gap-4 text-white">
-                <div className='w-[95%] md:w-[50%] p-2 md:p-10 bg-[rgba(0,0,0,0.4)] rounded-md border border-cyan-400'>
+              <div className="w-[95%] flex flex-col lg:flex-row justify-around items-center mt-16 gap-4 text-white">
+                <div className='w-[95%] lg:w-[50%] p-2 md:p-10 bg-[rgba(0,0,0,0.4)] rounded-md border border-cyan-400'>
                   <h1 className="text-xl font-semibold border-b-2 border-cyan-600 p-2 mb-8">Commission by each vendor</h1>
                   <div className="my-2">
                     {vendorCommissions.map((vendor, index) => (
@@ -93,7 +93,7 @@ const AdminWallet = () => {
                     ))}
                   </div>
                 </div>
-                <div className="w-[95%] md:w-[50%] p-2 md:p-10 bg-[rgba(0,0,0,0.4)] rounded-md border border-cyan-400">
+                <div className="w-[95%] lg:w-[50%] p-2 md:p-10 bg-[rgba(0,0,0,0.4)] rounded-md border border-cyan-400">
                   <h1 className="text-xl font-semibold border-b-2 border-cyan-600 p-2 mb-8">Current Balance</h1>
                   <div className="my-3">
                     <div className="flex justify-center items-center w-full p-2 border-b-2 border-cyan-600 mb-4">
