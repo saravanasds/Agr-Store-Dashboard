@@ -28,6 +28,7 @@ import Wallet from "./vendor/Wallet.jsx";
 import CompletedOrder from "./vendor/CompletedOrder.jsx";
 import CurrentOrder from "./vendor/CurrentOrder.jsx";
 import VendorBalanceTable from "./admin/VendorBalanceTable.jsx";
+import OfferProducts from "./admin/OfferProducts.jsx";
 
 function App() {
   const [role, setRole] = useState(localStorage.getItem("role"));
@@ -82,6 +83,7 @@ function App() {
                 <Route path="/addNewVendor" element={<AddNewVendor />} />
                 <Route path="/adminDepartment" element={<Department />} />
                 <Route path="/adminCategory" element={<Category />} />
+                <Route path="/offerProducts" element={<OfferProducts />} />
                 <Route path="/vendorBalanceTable" element={<VendorBalanceTable />} />
                 <Route path="/adminWallet" element={<AdminWallet />} />
                 <Route path="/adminPayHistory" element={<PaymentHistory />} />

@@ -25,7 +25,6 @@ const ProductList = () => {
     const fetchVendorProducts = async () => {
       try {
         const response = await axios.post('http://localhost:5000/api/vendor/getVendorProducts', { vendorEmail });
-        console.log(response.data);
         setVendorProducts(response.data.data || []);
       } catch (err) {
         setError('Error fetching products');

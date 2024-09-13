@@ -129,7 +129,7 @@ const Products = () => {
                                         <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">ShopName</th>
                                         <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Product Code</th>
                                         <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Name</th>
-                                        <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Description</th>
+                                        <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Department</th>
                                         <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Category</th>
                                         <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Unit</th>
                                         <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Price</th>
@@ -145,7 +145,7 @@ const Products = () => {
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productCode || 'N/A'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.shopName || 'N/A'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productName || 'N/A'}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.description || 'N/A'}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.department || 'N/A'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.category || 'N/A'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.unit || 'N/A'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">&#x20B9; {product.price || 'N/A'}</td>

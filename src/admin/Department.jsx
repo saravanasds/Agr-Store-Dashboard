@@ -7,8 +7,13 @@ const Department = () => {
     const [departments, setDepartments] = useState([]);
     const [newDepartment, setNewDepartment] = useState('');
     const [departmentImage, setDepartmentImage] = useState(null); // New state for the department image
+    const [coverImage, setCoverImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(''); // State for image preview
     const [loading, setLoading] = useState(true);
+    const [createLoading, setCreateLoading] =useState(false);
+    const [editLoading, setEditLoading] =useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
+    const [selectedDepartment, setSelectedDepartment] = useState(null);
 
     useEffect(() => {
         const fetchDepartments = async () => {
@@ -45,14 +50,30 @@ const Department = () => {
         }
     };
 
+    const handleCoverImageChange = (e) => {
+        const file = e.target.files[0];
+        setCoverImage(file);
+    }
+
+    const openEditPopup = (department) => {
+        setSelectedDepartment(department);
+        setOpenEdit(true);
+    };
+
+    const closeEditPopup = () => {
+        setOpenEdit(false);
+        setSelectedDepartment(null);
+    };
+
     const handleCreateDepartment = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setCreateLoading(true);
 
         if (newDepartment.trim() && departmentImage) {
             const formData = new FormData();
             formData.append('department', newDepartment);
             formData.append('departmentImage', departmentImage);
+            formData.append('coverImage', coverImage);
 
             try {
                 const response = await axios.post('http://localhost:5000/api/admin/createDepartment', formData, {
@@ -71,8 +92,52 @@ const Department = () => {
                 console.error('Error creating department:', error);
             }
             finally {
-                setLoading(false);
+                setCreateLoading(false);
             }
+        }
+    };
+
+    const handleEditSubmit = async (event) => {
+        event.preventDefault();
+        setEditLoading(true);
+
+        try {
+            // Create a FormData object to send the product data along with the image
+            const formData = new FormData();
+
+            // Check if a new product image is selected
+            if (selectedDepartment.departmentImage) {
+                formData.append('departmentImage', selectedDepartment.departmentImage);
+            }
+
+            if (selectedDepartment.coverImage) {
+                formData.append('coverImage', selectedDepartment.coverImage);
+            }
+            const response = await axios.put(
+                `http://localhost:5000/api/admin/editDepartment/${selectedDepartment._id}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            // Update the product list with the edited product
+            const updatedDepartments = departments.map((department) =>
+                department._id === selectedDepartment._id ? response.data.department : department
+            );
+
+            alert("Department Edited Successfully");
+            window.location.reload();
+            setDepartments(updatedDepartments);
+            closeEditPopup();
+            
+        } catch (error) {
+            console.error(error);
+        }
+        finally {
+            setEditLoading(false);
         }
     };
 
@@ -107,6 +172,13 @@ const Department = () => {
                                     accept="image/*"
                                     className='w-[250px] xs:w-[300px] mb-4 bg-white text-sm sm:text-[16px]'
                                 />
+                                <label htmlFor="" className='mb-4 text-white'>Cover Image:</label>
+                                <input
+                                    type="file"
+                                    onChange={handleCoverImageChange}
+                                    accept="image/*"
+                                    className='w-[250px] xs:w-[300px] mb-4 bg-white text-sm sm:text-[16px]'
+                                />
                                 <input
                                     type="text"
                                     value={newDepartment}
@@ -130,7 +202,7 @@ const Department = () => {
                                         </div>
 
                                         <button type='submit' className='w-full bg-cyan-600 py-2 px-6 text-white font-semibold text-sm sm:text-lg'>
-                                            {loading ? <ClipLoader color="#ffffff" size={20} /> : 'Create'}
+                                            {createLoading ? <ClipLoader color="#ffffff" size={20} /> : 'Create'}
                                         </button>
                                     </div>
                                 </div>
@@ -142,7 +214,10 @@ const Department = () => {
                             <h1 className='w-full text-center text-xl sm:text-3xl py-6 text-white font-semibold tracking-wider '>Our Departments</h1>
                             <div className='w-[90%] flex flex-wrap justify-center items-center gap-10 py-6'>
                                 {departments.map((dept) => (
-                                    <div key={dept._id} className="bg-[rgb(244,246,248)] rounded-xl overflow-hidden shadow-lg hover:scale-[1.1] transform transition-all duration-300 p-2">
+                                    <div key={dept._id}
+                                        className="bg-[rgb(244,246,248)] rounded-xl overflow-hidden shadow-lg hover:scale-[1.1] transform transition-all duration-300 p-2"
+                                        onClick={() => openEditPopup(dept)}
+                                    >
                                         <div className="w-full h-[150px] sm:h-[200px] flex justify-center items-center">
                                             <img
                                                 className="w-[180px] sm:w-[250px] h-full object-cover rounded-full"
@@ -156,6 +231,47 @@ const Department = () => {
                                     </div>
                                 ))}
                             </div>
+                            {
+                                openEdit &&
+                                (<div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                                    <div className="bg-white p-4 sm:p-8 rounded shadow-md w-60 sm:w-80 ml-10">
+                                        <h2 className="text-xl font-semibold mb-4">Edit Images</h2>
+                                        <form onSubmit={handleEditSubmit}>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium mb-2">Department Image</label>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => setSelectedDepartment({ ...selectedDepartment, departmentImage: e.target.files[0] })}
+                                                    className=" border border-gray-300 rounded w-full text-xs sm:text-sm"
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium mb-2">Cover Image</label>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => setSelectedDepartment({ ...selectedDepartment, coverImage: e.target.files[0] })}
+                                                    className=" border border-gray-300 rounded w-full text-xs sm:text-sm"
+                                                />
+                                            </div>
+                                            <div className="flex justify-end">
+                                                <button
+                                                    type="button"
+                                                    className="px-4 py-2 mr-2 bg-gray-500 text-white rounded text-xs sm:text-sm"
+                                                    onClick={closeEditPopup}
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded text-xs sm:text-sm">
+                                                {editLoading ? <ClipLoader color="#ffffff" size={20} /> : 'Create'}
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>)
+                            }
                         </div>
                     </div>)
             }

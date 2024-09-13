@@ -9,7 +9,7 @@ const VendorModel = ({ vendor, onClose }) => {
   
     return (
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 backdrop-blur-[3px] flex items-center justify-center">
-        <div className="bg-[rgba(0,0,0,0.5)] p-4 rounded shadow-lg w-[80%] md:w-[40%] ml-10  px-8 text-white border border-cyan-400 text-sm sm:text-[16px]">
+        <div className="bg-[rgba(0,0,0,0.5)] p-4 rounded shadow-lg w-[80%] md:w-[40%] ml-10 px-4 sm:px-8 text-white border border-cyan-400 text-sm sm:text-[16px]">
           <h2 className="text-2xl font-bold mb-4 text-center tracking-wider">Vendor Details</h2>
           <ul className="leading-loose">
             <li><span className="font-semibold tracking-wide">Name:</span> {vendor.vendorName}</li>

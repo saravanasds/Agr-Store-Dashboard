@@ -114,7 +114,6 @@ const AdminOverview = () => {
       try {
         const response = await axios.get('http://localhost:5000/api/order/getAllOrders');
         const orders = response.data.orders;
-        console.log(orders);
   
         // Filter orders with status 'Completed'
         const completedOrders = orders.filter(order => order.orderStatus === 'Completed');
