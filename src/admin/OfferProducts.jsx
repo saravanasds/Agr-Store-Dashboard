@@ -43,11 +43,14 @@ const OfferProducts = () => {
     const product = filteredProducts.length > 0 ? filteredProducts[0] : null;
     // console.log(product)
 
+
     // Handle form submission to update product details
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (product) {
             const formData = new FormData();
+
+            const balance = (price - (price * product.vendorCommission) / 100).toFixed(2);
 
             // Append other product details
             formData.append('productCode', product.productCode);
@@ -71,6 +74,7 @@ const OfferProducts = () => {
             formData.append('actualPrice', actualPrice);
             formData.append('price', price);
             formData.append('unit', unit);
+            formData.append('balance', balance);
 
             try {
                 const response = await axios.post('http://localhost:5000/api/admin/offerProduct', formData, {
@@ -178,9 +182,9 @@ const OfferProducts = () => {
 
                             <div className='py-2'>
                                 <p className='w-full mb-1 p-2 border border-gray-300 rounded text-xs'>
-                                    
+
                                     {product.productName}
-                                                
+
                                 </p>
 
                                 <textarea
@@ -213,7 +217,6 @@ const OfferProducts = () => {
                                         className='w-full mb-1 p-2 border border-gray-300 rounded text-xs'
                                     />
                                 </div>
-
 
 
                                 <button type='submit' className='w-full bg-blue-500 text-white p-2 rounded text-sm'>
@@ -272,7 +275,7 @@ const OfferProducts = () => {
             )}
 
             <div>
-                <OfferProductList/>
+                <OfferProductList />
             </div>
 
         </div>
