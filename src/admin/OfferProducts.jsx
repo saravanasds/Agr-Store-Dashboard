@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { VscAccount } from "react-icons/vsc";
 import axios from 'axios';
 import OfferProductList from './OfferProductList';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const OfferProducts = () => {
     const [products, setProducts] = useState([]);
     const [productCodeFilter, setProductCodeFilter] = useState('');
     const [productNameFilter, setProductNameFilter] = useState('');
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
 
     // State for editable product fields
     const [productImage, setProductImage] = useState('');
@@ -47,6 +50,9 @@ const OfferProducts = () => {
     // Handle form submission to update product details
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError(null); // Reset any previous error message
+
         if (product) {
             const formData = new FormData();
 
@@ -82,12 +88,26 @@ const OfferProducts = () => {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                console.log('Product added successfully:', response.data);
+                alert('Product added successfully');
+                window.location.reload();
             } catch (error) {
-                console.error('Error updating product:', error);
+                if (error.response && error.response.status === 400) {
+                    // Check if the error message is related to an existing product
+                    if (error.response.data.message === "Product with this product code already exists.") {
+                        alert("This product already exists. Please use a different product code.");
+                        setError("This product already exists. Please use a different product code.");
+                    } else {
+                        setError("An error occurred while adding the product. Please try again.");
+                    }
+                } else {
+                    setError("An unexpected error occurred. Please try again.");
+                }
+            } finally {
+                setLoading(false);
             }
         }
     };
+
 
 
     useEffect(() => {
@@ -145,7 +165,7 @@ const OfferProducts = () => {
             ) : product ? (
                 <div className='w-full flex flex-col-reverse lg:flex-row justify-around items-center gap-6 pb-10 border-b-2 border-cyan-500'>
                     <form className='w-[90%] sm:w-[70%] lg:w-[40%] xl:w-[30%] flex flex-col justify-center items-center' onSubmit={handleSubmit}>
-                        <div className="w-full bg-white shadow-sm rounded p-4 text-sm">
+                        <div className="w-full bg-white shadow-sm rounded p-2 px-4 text-sm">
                             <div className="flex justify-center items-center ">
                                 {/* Display product image */}
                                 {productImage && (
@@ -194,7 +214,7 @@ const OfferProducts = () => {
                                     className='w-full mb-1 p-2 border border-gray-300 rounded text-xs'
                                 />
 
-                                <div className='flex justify-between gap-2'>
+                                <div className='flex justify-between gap-2 mb-2'>
                                     <input
                                         type='text'
                                         placeholder='Actual Price'
@@ -220,8 +240,9 @@ const OfferProducts = () => {
 
 
                                 <button type='submit' className='w-full bg-blue-500 text-white p-2 rounded text-sm'>
-                                    Submit Changes
+                                    {loading ? <ClipLoader color="#ffffff" size={20} /> : 'Submit Changes'}
                                 </button>
+                                {error && <div className="error-message text-center text-red-600 mt-2">{error}</div>}
                             </div>
                         </div>
                     </form>

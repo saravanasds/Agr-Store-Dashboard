@@ -191,7 +191,7 @@ const AdminOrderStatus = () => {
                                 <tr key={product.productId || i} className="border-b">
                                   <td className="p-2 text-center">{i + 1}</td>
                                   <td className="p-2 text-center">{product.productCode}</td>
-                                  <td className="p-2 text-center">{product.productName}</td>
+                                  <td className="p-2 text-center">{product.productName} {product.offered === "true" ? <span className='text-red-600 text-xs font-semibold tracking-wider'>(Offered)</span> : " "}</td>
                                   <td className="p-2 text-center">{product.shopName}</td>
                                   <td className="p-2 text-center">{product.quantity}</td>
                                   <td className="p-2 text-center">{product.total}</td>
