@@ -157,38 +157,38 @@ const ProductList = () => {
 
           (<div className='w-full flex flex-col justify-center items-center p-4 md:p-10'>
 
-            <div className='w-full flex flex-col lg:flex-row justify-center lg:justify-between items-center mb-6 gap-6'>
+            <div className='w-full flex flex-col xl:flex-row justify-center xl:justify-between items-center mb-6 gap-6'>
               <div>
-                <span className='text-xl font-semibold tracking-wider'>Total products: {filteredProducts.length}</span>
+                <span className='text-xl font-semibold tracking-wider whitespace-nowrap'>Total products: {filteredProducts.length}</span>
               </div>
               {/* Filter Inputs */}
-              <div className='flex flex-col md:flex-row lg:justify-end justify-center items-center gap-4'>
+              <div className='w-full flex flex-col lg:flex-row xl:justify-end justify-center items-center gap-2 sm:gap-4'>
                 <input
                   type='text'
                   placeholder='Filter by product code'
                   value={productCodeFilter}
                   onChange={(e) => setProductCodeFilter(e.target.value)}
-                  className='p-2 border border-gray-300 rounded'
+                  className='w-full lg:w-auto p-2 border border-gray-300 rounded text-sm '
                 />
                 <input
                   type='text'
                   placeholder='Filter by product name'
                   value={productNameFilter}
                   onChange={(e) => setProductNameFilter(e.target.value)}
-                  className='p-2 border border-gray-300 rounded'
+                  className='w-full lg:w-auto p-2 border border-gray-300 rounded text-sm '
                 />
                 <input
                   type='text'
                   placeholder='Filter by category'
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className='p-2 border border-gray-300 rounded'
+                  className='w-full lg:w-auto p-2 border border-gray-300 rounded text-sm '
                 />
               </div>
             </div>
 
             <div className="overflow-auto w-full border-[1px] border-black">
-              <table className="min-w-full">
+              <table className="min-w-full whitespace-nowrap">
                 <thead className="bg-cyan-700">
                   <tr>
                     <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Sl.no</th>
@@ -207,7 +207,7 @@ const ProductList = () => {
                     <tr key={index} className='border-b-2'>
                       <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{startIndex + index + 1}</td>
                       <td className="px-6 py-4 flex justify-center items-center">
-                        <img src={product.productImage || ''} alt={product.productName || 'Product Image'} className='h-16 object-cover' />
+                        <img src={product.productImage || ''} alt={product.productName || 'Product Image'} className='h-8 sm:h-12 object-cover' />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productCode || 'N/A'}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-center text-xs sm:text-sm font-semibold">{product.productName || 'N/A'}</td>
@@ -220,13 +220,13 @@ const ProductList = () => {
                           className='p-1 text-xs sm:text-sm rounded-md shadow-md shadow-gray-600 text-blue-600 mr-2'
                           onClick={() => openEditPopup(product)}
                         >
-                          <FaEdit className='w-6 h-6' />
+                          <FaEdit className='w-4 h-4 sm:w-6 sm:h-6' />
                         </button>
                         <button
                           className='p-1 text-xs sm:text-sm rounded-md shadow-md shadow-gray-600 text-red-600'
                           onClick={() => openDeletePopup(product)}
                         >
-                          <RiDeleteBin5Line className='w-6 h-6' />
+                          <RiDeleteBin5Line className='w-4 h-4 sm:w-6 sm:h-6' />
                         </button>
                       </td>
                     </tr>
@@ -236,19 +236,19 @@ const ProductList = () => {
             </div>
 
             {/* Pagination */}
-            <div className='w-full flex justify-center items-center py-4'>
+            <div className='w-full flex justify-center items-center py-4 text-sm'>
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className='px-4 py-2 mx-1 bg-gray-500 text-white rounded disabled:opacity-50'
+                className='px-4 py-1 mx-1 bg-gray-500 text-white rounded disabled:opacity-50'
               >
-                Previous
+                Prev
               </button>
               <span className='mx-2'>{currentPage}</span>
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === Math.ceil(filteredProducts.length / productsPerPage)}
-                className='px-4 py-2 mx-1 bg-gray-500 text-white rounded disabled:opacity-50'
+                className='px-4 py-1 mx-1 bg-gray-500 text-white rounded disabled:opacity-50'
               >
                 Next
               </button>
@@ -259,71 +259,76 @@ const ProductList = () => {
 
       {/* Edit Popup */}
       {isEditPopupOpen && selectedProduct && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-8 rounded shadow-md w-80">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-[rgba(0,0,0,0.2)] backdrop-blur-[1px]">
+          <div className="bg-white px-4 md:px-8 py-4 rounded shadow-md w-[80%] lg:w-[60%] ml-10 z-50">
             <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
-            <form onSubmit={handleEditSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Product Name</label>
-                <input
-                  type="text"
-                  value={selectedProduct.productName}
-                  onChange={(e) => setSelectedProduct({ ...selectedProduct, productName: e.target.value })}
-                  className="p-2 border border-gray-300 rounded w-full"
-                />
+            <form className="w-full flex md:flex-row flex-col gap-0 md:gap-10" onSubmit={handleEditSubmit}>
+              <div className='w-full md:w-[50%]'>
+                <div className="mb-2 md:mb-4">
+                  <label className="block text-xs md:text-sm font-medium mb-2">Product Name</label>
+                  <input
+                    type="text"
+                    value={selectedProduct.productName}
+                    onChange={(e) => setSelectedProduct({ ...selectedProduct, productName: e.target.value })}
+                    className="p-2 border border-gray-300 rounded w-full text-xs md:text-sm"
+                  />
+                </div>
+                <div className="mb-2 md:mb-4">
+                  <label className="block text-xs md:text-sm font-medium mb-2">Category</label>
+                  <input
+                    type="text"
+                    value={selectedProduct.category}
+                    onChange={(e) => setSelectedProduct({ ...selectedProduct, category: e.target.value })}
+                    className="p-2 border border-gray-300 rounded w-full text-xs md:text-sm"
+                  />
+                </div>
+                <div className="mb-2 md:mb-4">
+                  <label className="block text-xs md:text-sm font-medium mb-2">Description</label>
+                  <textarea
+                    value={selectedProduct.description}
+                    onChange={(e) => setSelectedProduct({ ...selectedProduct, description: e.target.value })}
+                    className="p-2 border border-gray-300 rounded w-full text-xs md:text-sm"
+                  />
+                </div>
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Category</label>
-                <input
-                  type="text"
-                  value={selectedProduct.category}
-                  onChange={(e) => setSelectedProduct({ ...selectedProduct, category: e.target.value })}
-                  className="p-2 border border-gray-300 rounded w-full"
-                />
+              <div className='w-full md:w-[50%]'>
+                <div className="mb-2 md:mb-4">
+                  <label className="block text-xs md:text-sm font-medium mb-2">Unit</label>
+                  <input
+                    type="text"
+                    value={selectedProduct.unit}
+                    onChange={(e) => setSelectedProduct({ ...selectedProduct, unit: e.target.value })}
+                    className="p-2 border border-gray-300 rounded w-full text-xs md:text-sm"
+                  />
+                </div>
+                <div className="mb-2 md:mb-4">
+                  <label className="block text-xs md:text-sm font-medium mb-2">Price</label>
+                  <input
+                    type="number"
+                    value={selectedProduct.price}
+                    onChange={(e) => setSelectedProduct({ ...selectedProduct, price: parseFloat(e.target.value) })}
+                    className="p-2 border border-gray-300 rounded w-full text-xs md:text-sm"
+                  />
+                </div>
+                <div className="mb-2 md:mb-4">
+                  <label className="block text-xs md:text-sm font-medium mb-2">Product Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setSelectedProduct({ ...selectedProduct, productImage: e.target.files[0] })}
+                    className="border border-gray-300 rounded w-full text-xs md:text-sm"
+                  />
+                </div>
+                <div className="flex justify-end">
+                  <button type="button" onClick={closeEditPopup} className="px-4 py-2 mr-2 bg-gray-500 text-white rounded text-xs md:text-sm">
+                    Cancel
+                  </button>
+                  <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded text-xs md:text-sm">
+                    Save
+                  </button>
+                </div>
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Description</label>
-                <textarea
-                  value={selectedProduct.description}
-                  onChange={(e) => setSelectedProduct({ ...selectedProduct, description: e.target.value })}
-                  className="p-2 border border-gray-300 rounded w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Unit</label>
-                <input
-                  type="text"
-                  value={selectedProduct.unit}
-                  onChange={(e) => setSelectedProduct({ ...selectedProduct, unit: e.target.value })}
-                  className="p-2 border border-gray-300 rounded w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Price</label>
-                <input
-                  type="number"
-                  value={selectedProduct.price}
-                  onChange={(e) => setSelectedProduct({ ...selectedProduct, price: parseFloat(e.target.value) })}
-                  className="p-2 border border-gray-300 rounded w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Product Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setSelectedProduct({ ...selectedProduct, productImage: e.target.files[0] })}
-                  className="p-2 border border-gray-300 rounded w-full"
-                />
-              </div>
-              <div className="flex justify-end">
-                <button type="button" onClick={closeEditPopup} className="px-4 py-2 mr-2 bg-gray-500 text-white rounded">
-                  Cancel
-                </button>
-                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
-                  Save
-                </button>
-              </div>
+
             </form>
           </div>
         </div>
@@ -331,15 +336,15 @@ const ProductList = () => {
 
       {/* Delete Popup */}
       {isDeletePopupOpen && (
-        <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center'>
-          <div className='bg-white p-8 rounded-md'>
+        <div className='fixed inset-0 flex items-center justify-center z-50 bg-[rgba(0,0,0,0.2)] backdrop-blur-[2px]'>
+          <div className='w-[90%] sm:w-auto bg-white p-4 sm:p-8 rounded-md text-sm'>
             <h2 className='text-xl font-semibold mb-4'>Confirm Delete {selectedProduct.productName}</h2>
             <p>Are you sure you want to delete this product?</p>
             <div className='flex justify-end gap-4 mt-4'>
-              <button onClick={closeDeletePopup} className='p-2 bg-gray-300 rounded'>
+              <button onClick={closeDeletePopup} className='px-4 py-1 bg-gray-300 rounded'>
                 Cancel
               </button>
-              <button onClick={handleDeleteProduct} className='p-2 bg-red-600 text-white rounded'>
+              <button onClick={handleDeleteProduct} className='px-4 py-1 bg-red-600 text-white rounded'>
                 Delete
               </button>
             </div>

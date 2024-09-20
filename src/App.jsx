@@ -5,11 +5,8 @@ import Overview from "./vendor/Overview.jsx";
 import ProductList from "./vendor/ProductList.jsx";
 import AddProduct from "./vendor/AddProduct.jsx";
 import SalesList from "./vendor/SalesList.jsx";
-// import OrderStatus from "./vendor/OrderStatus.jsx";
 import VendorLogin from "./components/VendorLogin.jsx";
 import VendorPayHistory from "./vendor/VendorPayHistory.jsx"
-
-// Admin
 import AdminRegister from "./components/AdminRegister.jsx";
 import AdminLogin from "./components/AdminLogin.jsx";
 import AdminSidebar from "./components/AdminSidebar.jsx";
@@ -29,6 +26,7 @@ import CompletedOrder from "./vendor/CompletedOrder.jsx";
 import CurrentOrder from "./vendor/CurrentOrder.jsx";
 import VendorBalanceTable from "./admin/VendorBalanceTable.jsx";
 import OfferProducts from "./admin/OfferProducts.jsx";
+import Settings from "./Settings.jsx";
 
 function App() {
   const [role, setRole] = useState(localStorage.getItem("role"));
@@ -87,6 +85,7 @@ function App() {
                 <Route path="/vendorBalanceTable" element={<VendorBalanceTable />} />
                 <Route path="/adminWallet" element={<AdminWallet />} />
                 <Route path="/adminPayHistory" element={<PaymentHistory />} />
+                <Route path="/settings" element={<Settings />} />
               </>
             )}
             <Route path="/adminProducts" element={<Products />} />

@@ -121,6 +121,12 @@ const AdminSidebar = ({ children, role }) => {
             roles: ["admin", "delivery boy"]
         },
         {
+            path: "/settings",
+            name: "Settings",
+            icon: <BsFillBagCheckFill />,
+            roles: ["admin"]
+        },
+        {
             name: "Logout",
             icon: <RiLogoutCircleRLine />,
             action: () => {
@@ -154,7 +160,7 @@ const AdminSidebar = ({ children, role }) => {
                             <NavLink
                                 to={item.path}
                                 key={index}
-                                className="link flex items-center py-[2px] px-[18px] gap-[10px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-3 "
+                                className="link flex items-center py-[2px] px-[18px] gap-[10px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-2 "
                                 activeClassName="active"
                                 style={{ justifyContent: isOpen ? "start" : "center" }}
                                 onClick={handleMenuClick}
@@ -169,7 +175,7 @@ const AdminSidebar = ({ children, role }) => {
                                     handleMenuClick();
                                 }}
                                 key={index}
-                                className="link flex items-center py-[10px] px-[18px] gap-[15px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-5"
+                                className="link flex items-center py-[2px] px-[18px] gap-[10px] text-cyan-400 hover:bg-gradient-to-r from-cyan-500 to-transparent hover:text-white transition-all duration-500 mb-5"
                                 style={{ justifyContent: isOpen ? "start" : "center", width: '100%', border: 'none', cursor: 'pointer' }}
                             >
                                 <div className="icon" style={{ fontSize: isOpen ? "25px" : "20px" }}>{item.icon}</div>

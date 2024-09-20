@@ -48,32 +48,32 @@ const PaymentHistory = () => {
 
           <div className="w-[90%] sm:w-[80%] mx-auto mt-8">
             <div className="overflow-auto border border-gray-300 rounded">
-              <table className="min-w-full">
+              <table className="min-w-full whitespace-nowrap text-xs sm:text-sm">
                 <thead className="bg-cyan-700">
                   <tr>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Sl.no</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Transaction Id</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Shop Name</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Amount</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Status</th>
+                    <th className="p-3 text-center text-xs font-medium text-white uppercase tracking-wider">Sl.no</th>
+                    <th className="p-3 text-center text-xs font-medium text-white uppercase tracking-wider">Date</th>
+                    <th className="p-3 text-center text-xs font-medium text-white uppercase tracking-wider">Transaction Id</th>
+                    <th className="p-3 text-center text-xs font-medium text-white uppercase tracking-wider">Shop Name</th>
+                    <th className="p-3 text-center text-xs font-medium text-white uppercase tracking-wider">Amount</th>
+                    <th className="p-3 text-center text-xs font-medium text-white uppercase tracking-wider">Status</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {payHistories.map((history, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">{index + 1}</td>
+                      <td className="px-3 py-2 whitespace-nowrap text-center">{index + 1}</td>
                       <td className={"px-6 py-4 whitespace-nowrap text-center"}>
                         {format(new Date(history.createdAt), 'dd/MM/yy')}
                       </td>
-                      <td className={"px-6 py-4 whitespace-nowrap text-center"}>
+                      <td className={"px-3 py-2 whitespace-nowrap text-center"}>
                         {history.transactionId}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">{history.shopName}</td>
-                      <td className={"px-6 py-4 whitespace-nowrap text-center"}>
+                      <td className="px-3 py-2 whitespace-nowrap text-center">{history.shopName}</td>
+                      <td className={"px-3 py-2 whitespace-nowrap text-center"}>
                         {history.paymentAmount}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">Successful</td>
+                      <td className="px-3 py-2 whitespace-nowrap text-center">Successful</td>
                     </tr>
                   ))}
                 </tbody>

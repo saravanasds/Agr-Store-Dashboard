@@ -7,6 +7,7 @@ import { PiHandbagBold } from "react-icons/pi";
 import axios from 'axios';
 
 const Overview = () => {
+  const [department, setDepartment] = useState('');
   const [vendorProducts, setVendorProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [vendorEmail, setVendorEmail] = useState('');
@@ -21,6 +22,11 @@ const Overview = () => {
   useEffect(() => {
     const email = localStorage.getItem("vendorEmail");
     setVendorEmail(email);
+  }, []);
+
+  useEffect(() => {
+    const email = localStorage.getItem("vendorDepartment");
+    setDepartment(email);
   }, []);
 
   useEffect(() => {
@@ -75,7 +81,7 @@ const Overview = () => {
     <div className='bg-slate-300 w-full min-h-[100vh]'>
 
       <div className='w-full h-16 bg-gray-800 flex justify-between items-center py-3 px-10'>
-        <div><span className='sm:text-2xl font-semibold uppercase text-white tracking-widest'>Furnitures</span></div>
+        <div><span className='sm:text-2xl font-semibold uppercase text-white tracking-widest'>{department}</span></div>
         <div className=' rounded-full flex justify-center items-center'>
           <VscAccount className='text-white w-8 h-8' />
         </div>

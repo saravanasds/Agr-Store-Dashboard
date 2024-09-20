@@ -12,6 +12,7 @@ const AdminOrderStatus = () => {
   const [completePopupOpen, setCompletePopupOpen] = useState(false)
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(null);
+  const [selectedTotalAmount, setSelectedTotalAmount] = useState(0);
 
   // Separate pagination states for each tab
   const [currentOrdersPage, setCurrentOrdersPage] = useState(1);
@@ -109,6 +110,74 @@ const AdminOrderStatus = () => {
     setCancelPopupOpen(!cancelPopupOpen); // Toggle the popup state
   };
 
+  const print = (orderId, index, totalAmount) => {
+    setSelectedOrderId(orderId);
+    setSelectedOrderIndex(index);
+    setSelectedTotalAmount(totalAmount);
+    const printContents = document.getElementById("print").innerHTML;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.open();
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+            @media print {
+                body {
+                    width: 80mm; /* Width for 80mm thermal printer */
+                    margin: 0;
+                    padding: 10px;
+                    font-size: 12px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    border: 1px solid rgba(0, 0, 0, 0.3); 
+                }
+                .heading {
+                  text-align: center;
+                  font-size: 18px;
+                  padding: 4px;
+                } 
+                #shop, #productCode, #shopHead, #productCodeHead{
+                  display: none;
+                }
+                .content {
+                    width: 100%;
+                }
+                .totalAmount {
+                  text-align: right;
+                  padding-right: 20px;
+                }
+                #table { 
+                    width: 100%;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.2); 
+                    border-top: 1px solid rgba(0, 0, 0, 0.2); 
+                    padding-bottom: 5px;
+                    padding-top: 5px;
+                }
+                h1, h2 {
+                    text-align: center;
+                    font-size: 12px;       
+                }
+                td{
+                  text-align: center;
+                }
+            }
+            </style>
+        </head>
+        <body>
+        <h1 class='heading'>Agr Store</h1>
+        <div class='content'>${printContents}</div>
+        <div><h1 class='totalAmount'>Total Amount: ${selectedTotalAmount.toFixed(2)}</h1></div>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+    printWindow.close();
+  };
+
+
   const renderTable = (filteredOrders, currentPage, setPage) => {
     const { currentRecords, totalPages } = getPaginationData(filteredOrders, currentPage);
 
@@ -141,7 +210,7 @@ const AdminOrderStatus = () => {
                     <td className="p-2 text-center">{order.address}</td>
                     <td className="p-2 text-center">{order.pincode}</td>
                     <td className="p-2 text-center">{order.mobileNumber}</td>
-                    <td className="p-2 text-center">{order.totalAmount}</td>
+                    <td id='totalAmount' className="p-2 text-center">{order.totalAmount}</td>
                     <td className="p-2 text-center">{order.discount}</td>
                     {activeTab === "completed" ? <td className="p-2 text-center">&#x20B9; {totalOrderBalance}</td> : ""}
                     <td className="p-2 text-center">{order.orderStatus}</td>
@@ -149,16 +218,22 @@ const AdminOrderStatus = () => {
                       {activeTab === 'current' && order.orderStatus === 'Processing' ? (
                         <>
                           <button
-                            onClick={() => completePopup(order._id, index)}
+                            onClick={() => completePopup(order._id, index )}
                             className='bg-green-500 text-xs text-white font-semibold py-1 px-3 rounded-md mr-2'
                           >
                             Complete
                           </button>
                           <button
                             onClick={() => cancelPopup(order._id, index)}
-                            className='bg-gray-500 text-xs text-white font-semibold py-1 px-3 rounded-md'
+                            className='bg-gray-500 text-xs text-white font-semibold py-1 px-3 rounded-md mr-2'
                           >
                             Cancel
+                          </button>
+                          <button
+                            onClick={() => print(order._id, index, order.totalAmount)}
+                            className='bg-blue-500 text-xs text-white font-semibold py-1 px-3 rounded-md'
+                          >
+                            Print
                           </button>
 
                         </>
@@ -166,21 +241,21 @@ const AdminOrderStatus = () => {
                     </td>
                   </tr>
                   {openOrders.has(order._id) && (
-                    <tr>
+                    <tr id='print'>
                       <td colSpan="10">
                         <div className="p-1 bg-gray-200 border border-gray-700">
                           <div className='w-full flex justify-between items-center px-10 py-2 text-xs md:text-sm'>
                             <h1><strong>Order Id: </strong> #{order._id}</h1>
                             <h1><strong>Time: </strong> {formatDate(new Date(order.createdAt))}</h1>
                           </div>
-                          <table className="min-w-full bg-white">
+                          <table id='table' className="min-w-full bg-white">
                             <thead>
                               <tr>
                                 <th className="p-2">Sl.no</th>
-                                <th className="p-2">Product Code</th>
+                                <th id='productCodeHead' className="p-2">Product Code</th>
                                 <th className="p-2">Product</th>
-                                <th className="p-2">Shop</th>
-                                <th className="p-2">Quantity</th>
+                                <th id='shopHead' className="p-2">Shop</th>
+                                <th className="p-2">Qty</th>
                                 <th className="p-2">Price</th>
                                 {activeTab === "completed" ? <th className="p-2">Commission</th> : ""}
                                 {activeTab === "completed" ? <th className="p-2">Balance</th> : ""}
@@ -190,9 +265,9 @@ const AdminOrderStatus = () => {
                               {order.products.map((product, i) => (
                                 <tr key={product.productId || i} className="border-b">
                                   <td className="p-2 text-center">{i + 1}</td>
-                                  <td className="p-2 text-center">{product.productCode}</td>
+                                  <td id='productCode' className="p-2 text-center">{product.productCode}</td>
                                   <td className="p-2 text-center">{product.productName} {product.offered === "true" ? <span className='text-red-600 text-xs font-semibold tracking-wider'>(Offered)</span> : " "}</td>
-                                  <td className="p-2 text-center">{product.shopName}</td>
+                                  <td id='shop' className="p-2 text-center">{product.shopName}</td>
                                   <td className="p-2 text-center">{product.quantity}</td>
                                   <td className="p-2 text-center">{product.total}</td>
                                   {activeTab === "completed" ? <td className="p-2 text-center">&#x20B9; {(product.total * product.vendorCommission) / 100}</td> : " "}

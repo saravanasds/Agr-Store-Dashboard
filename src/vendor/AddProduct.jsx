@@ -146,10 +146,10 @@ const AddProduct = () => {
 
           (<main className="w-full flex items-center justify-center py-8">
             <form
-              className='w-[90%] border-2 flex flex-col xl:flex-row items-center justify-center bg-white shadow-sm shadow-black'
+              className='w-[90%] border-2 flex flex-col xl:flex-row items-center justify-center bg-white shadow-sm shadow-black text-xs sm:text-[16px]'
               onSubmit={handleAddProduct}
             >
-              <div className="w-full xl:w-[70%] bg-white rounded p-6 flex flex-col sm:p-8 md:grid lg:grid-cols-2 gap-6 border">
+              <div className="w-full xl:w-[70%] bg-white rounded p-3 py-6 flex flex-col sm:p-8 md:grid lg:grid-cols-2 gap-2 sm:gap-6 border whitespace-nowrap">
                 <div className="">
                   <label className="block text-gray-700 font-semibold mb-1" htmlFor="dept">
                     Department
@@ -168,7 +168,7 @@ const AddProduct = () => {
                     id="categorySelect"
                     value={category}
                     onChange={handleCategoryChange}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500 text-xs sm:text-[16px]"
                   >
                     <option value="">Select Category</option>
                     {categories.map((cat) => (
@@ -189,7 +189,7 @@ const AddProduct = () => {
                     id="pname"
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500 text-xs sm:text-[16px]"
                   />
                 </div>
 
@@ -203,7 +203,7 @@ const AddProduct = () => {
                     id="des"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500 text-xs sm:text-[16px]"
                   />
                 </div>
 
@@ -217,7 +217,7 @@ const AddProduct = () => {
                     id="unit"
                     value={unit}
                     onChange={(e) => setUnit(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500 text-xs sm:text-[16px]"
                   />
                 </div>
 
@@ -230,7 +230,7 @@ const AddProduct = () => {
                     id="productImage"
                     name="productImage"
                     onChange={handleProductImageChange}
-                    className="w-full border border-gray-300 rounded-md px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
+                    className="w-full border border-gray-300 rounded-md px-3 text-gray-700 focus:outline-none focus:border-indigo-500 text-xs sm:text-[16px]"
                     required
                   />
                 </div>
@@ -245,7 +245,7 @@ const AddProduct = () => {
                     id="actualPrice"
                     value={actualPrice}
                     onChange={(e) => setActualPrice(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500 text-xs sm:text-[16px]"
                   />
                 </div>
 
@@ -259,7 +259,7 @@ const AddProduct = () => {
                     id="price"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500"
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-indigo-500 text-xs sm:text-[16px]"
                   />
                 </div>
 
